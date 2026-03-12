@@ -1,0 +1,279 @@
+---
+import { translations, type Lang } from '../i18n/translations';
+interface Props { lang?: Lang; }
+const { lang = 'en' } = Astro.props;
+const t = translations[lang].hero;
+---
+
+<section id="home" class="hero">
+  <canvas id="hero-canvas" aria-hidden="true"></canvas>
+
+  <div class="hero__content container">
+    <div class="hero__eyebrow fade-up">
+      <span class="tag">{t.tag1}</span>
+      <span class="tag">{t.tag2}</span>
+    </div>
+
+    <h1 class="hero__title fade-up">
+      <span class="hero__title-line">{t.titleLine1}</span>
+      <span class="hero__title-line hero__title-italic gradient-text">{t.titleLine2}</span>
+    </h1>
+
+    <p class="hero__subtitle fade-up">{t.subtitle}</p>
+
+    <div class="hero__actions fade-up">
+      <a href="#services" class="btn btn-primary"><span>{t.cta1}</span></a>
+      <a href="#about" class="btn btn-outline"><span>{t.cta2}</span></a>
+    </div>
+
+    <div class="hero__scroll-indicator fade-in">
+      <div class="hero__scroll-line"></div>
+      <span>{t.scroll}</span>
+    </div>
+  </div>
+
+  <div class="hero__marquee" aria-hidden="true">
+    <div class="hero__marquee-track">
+      {[...t.marquee, ...t.marquee].map((item, i) => (
+        i % t.marquee.length === t.marquee.length - 1
+          ? <>{item}<span class="sep">◆</span></>
+          : <>{item}<span class="sep">◆</span></>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  padding-top: 100px;
+}
+
+#hero-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.hero__content {
+  position: relative;
+  z-index: 2;
+  max-width: 900px;
+  padding-bottom: 8rem;
+}
+
+.hero__eyebrow {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  width: 100%;
+  overflow: hidden;
+}
+
+.hero__title { margin-bottom: 2rem; }
+
+.hero__title-line {
+  display: block;
+  letter-spacing: -0.02em;
+}
+
+.hero__title-italic {
+  font-style: italic;
+  font-weight: 300;
+}
+
+.hero__subtitle {
+  font-size: clamp(0.95rem, 1.4vw, 1.1rem);
+  color: var(--clr-text-muted);
+  margin-bottom: 3rem;
+  max-width: 580px;
+  line-height: 1.8;
+}
+
+.hero__actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.hero__scroll-indicator {
+  position: absolute;
+  bottom: 3rem;
+  left: clamp(20px, 5vw, 60px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.hero__scroll-line {
+  width: 1px;
+  height: 60px;
+  background: linear-gradient(to bottom, var(--clr-accent), transparent);
+  animation: scrollPulse 2.5s ease-in-out infinite;
+}
+
+@keyframes scrollPulse {
+  0%, 100% { transform: scaleY(1); opacity: 1; }
+  50% { transform: scaleY(0.5); opacity: 0.3; }
+}
+
+.hero__scroll-indicator span {
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--clr-text-dim);
+  writing-mode: vertical-rl;
+}
+
+.hero__marquee {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+  border-top: 1px solid var(--clr-border);
+  background: rgba(10, 6, 16, 0.6);
+  backdrop-filter: blur(10px);
+  padding: 1rem 0;
+}
+
+.hero__marquee-track {
+  display: flex;
+  gap: 2rem;
+  width: max-content;
+  animation: marquee 30s linear infinite;
+}
+
+.hero__marquee-track span,
+.hero__marquee-track :global(span) {
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--clr-text-dim);
+  white-space: nowrap;
+}
+
+.hero__marquee-track .sep,
+.hero__marquee-track :global(.sep) {
+  color: var(--clr-purple-mid);
+  letter-spacing: 0;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@media (max-width: 768px) {
+  .hero__title { font-size: clamp(2.2rem, 8vw, 3.5rem); }
+}
+
+@media (max-width: 600px) {
+  .hero__scroll-indicator { display: none; }
+  .hero__content { padding-bottom: 6rem; }
+  .hero__subtitle { font-size: 0.92rem; }
+  .hero__actions { gap: 0.75rem; }
+  .hero__actions .btn { padding: 0.8rem 1.6rem; font-size: 0.72rem; }
+  .hero__eyebrow { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+  .hero__title { font-size: clamp(2rem, 9vw, 2.8rem); }
+  .hero__title-line { word-break: break-word; }
+}
+</style>
+
+<script>
+import * as THREE from 'three';
+import { gsap } from 'gsap';
+
+const canvas = document.getElementById('hero-canvas') as HTMLCanvasElement;
+const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100);
+camera.position.z = 3;
+
+const count = 4000;
+const positions = new Float32Array(count * 3);
+const colors = new Float32Array(count * 3);
+
+const palette = [
+  new THREE.Color('#4a2d8c'), new THREE.Color('#6b3fa8'),
+  new THREE.Color('#9b4dff'), new THREE.Color('#c4a0f5'),
+  new THREE.Color('#b06dff'), new THREE.Color('#d4a853'),
+];
+
+for (let i = 0; i < count; i++) {
+  const i3 = i * 3;
+  const theta = Math.random() * Math.PI * 2;
+  const r = Math.pow(Math.random(), 0.5) * 6;
+  const arm = Math.floor(Math.random() * 3) * (Math.PI * 2 / 3);
+  const armAngle = theta + r * 0.3 + arm;
+  positions[i3]     = Math.cos(armAngle) * r + (Math.random() - 0.5) * 1.5;
+  positions[i3 + 1] = (Math.random() - 0.5) * 2;
+  positions[i3 + 2] = Math.sin(armAngle) * r * 0.4 + (Math.random() - 0.5) * 1.5;
+  const clr = palette[Math.floor(Math.random() * palette.length)];
+  colors[i3] = clr.r; colors[i3 + 1] = clr.g; colors[i3 + 2] = clr.b;
+}
+
+const geo = new THREE.BufferGeometry();
+geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+const mat = new THREE.PointsMaterial({
+  size: 0.018, vertexColors: true, transparent: true, opacity: 0.85,
+  sizeAttenuation: true, blending: THREE.AdditiveBlending, depthWrite: false,
+});
+
+const particles = new THREE.Points(geo, mat);
+scene.add(particles);
+
+let mouseX = 0, mouseY = 0;
+document.addEventListener('mousemove', (e) => {
+  mouseX = (e.clientX / window.innerWidth - 0.5) * 0.4;
+  mouseY = (e.clientY / window.innerHeight - 0.5) * 0.4;
+});
+
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+const clock = new THREE.Clock();
+function animate() {
+  requestAnimationFrame(animate);
+  const elapsed = clock.getElapsedTime();
+  particles.rotation.y = elapsed * 0.04 + mouseX * 0.3;
+  particles.rotation.x = elapsed * 0.01 + mouseY * 0.2;
+  mat.opacity = 0.6 + Math.sin(elapsed * 0.5) * 0.15;
+  camera.position.x += (mouseX * 0.5 - camera.position.x) * 0.05;
+  camera.position.y += (-mouseY * 0.3 - camera.position.y) * 0.05;
+  renderer.render(scene, camera);
+}
+animate();
+
+gsap.set('.fade-up', { opacity: 0, y: 40 });
+gsap.set('.fade-in', { opacity: 0 });
+const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+tl.to('.hero__eyebrow', { opacity: 1, y: 0, duration: 0.9, delay: 0.4 })
+  .to('.hero__title-line', { opacity: 1, y: 0, duration: 1, stagger: 0.2 }, '-=0.5')
+  .to('.hero__subtitle', { opacity: 1, y: 0, duration: 0.9 }, '-=0.5')
+  .to('.hero__actions', { opacity: 1, y: 0, duration: 0.8 }, '-=0.4')
+  .to('.hero__scroll-indicator', { opacity: 1, duration: 0.8 }, '-=0.2');
+
+const marquee = document.querySelector('.hero__marquee-track') as HTMLElement | null;
+if (marquee) {
+  marquee.addEventListener('mouseenter', () => { marquee.style.animationPlayState = 'paused'; });
+  marquee.addEventListener('mouseleave', () => { marquee.style.animationPlayState = 'running'; });
+}
+</script>

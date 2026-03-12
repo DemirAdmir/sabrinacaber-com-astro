@@ -1,0 +1,156 @@
+---
+import Nav from '../components/Nav.astro';
+import { translations, type Lang } from '../i18n/translations';
+import '../styles/global.css';
+
+interface Props {
+  lang?: Lang;
+  title?: string;
+  description?: string;
+}
+
+const { lang = 'en', title, description } = Astro.props;
+const t = translations[lang];
+const pageTitle = title ?? t.meta.title;
+const pageDesc = description ?? t.meta.description;
+const altUrl = lang === 'en' ? '/fr/' : '/';
+---
+
+<!doctype html>
+<html lang={lang}>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content={pageDesc} />
+  <meta name="author" content="Sabrina Caber" />
+  <meta property="og:title" content={pageTitle} />
+  <meta property="og:description" content={pageDesc} />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.sabrinacaber.com" />
+  <link rel="alternate" hreflang="en" href="https://www.sabrinacaber.com/" />
+  <link rel="alternate" hreflang="fr" href="https://www.sabrinacaber.com/fr/" />
+  <link rel="alternate" hreflang="x-default" href="https://www.sabrinacaber.com/" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <title>{pageTitle}</title>
+</head>
+<body>
+  <Nav lang={lang} />
+  <main>
+    <slot />
+  </main>
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__inner">
+        <div class="footer__brand">
+          <a href={lang === 'en' ? '/' : '/fr/'} class="footer__logo">Sabrina Caber</a>
+          <p class="footer__tagline">{t.footer.tagline}</p>
+        </div>
+        <div class="footer__links">
+          <a href="#about">{t.footer.links.about}</a>
+          <a href="#services">{t.footer.links.services}</a>
+          <a href="#work">{t.footer.links.experience}</a>
+          <a href="#contact">{t.footer.links.contact}</a>
+        </div>
+        <div class="footer__contact">
+          <a href="mailto:sabrinacaber@gmail.com" class="footer__contact-link">sabrinacaber@gmail.com</a>
+          <a href="tel:+38761997090" class="footer__contact-link">+387 61-997-090</a>
+          <a href={altUrl} class="footer__contact-link footer__lang-switch">
+            {lang === 'en' ? '🇫🇷 Version française' : '🇬🇧 English version'}
+          </a>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <p>&copy; {new Date().getFullYear()} Sabrina Caber. {t.footer.copyright}</p>
+        <p>{t.footer.developedBy} <a href="https://admirdemir.com" target="_blank" rel="noopener noreferrer" class="footer__dev-link">admirdemir.com</a></p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
+
+<style>
+.footer {
+  padding: 5rem 0 2rem;
+  border-top: 1px solid var(--clr-border);
+  background: var(--clr-bg-2);
+}
+
+.footer__inner {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: start;
+  gap: 3rem;
+  margin-bottom: 4rem;
+}
+
+.footer__inner > * { min-width: 0; }
+
+.footer__logo {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 300;
+  color: var(--clr-white);
+  display: block;
+  margin-bottom: 0.5rem;
+  transition: color 0.3s ease;
+}
+
+.footer__logo:hover { color: var(--clr-accent); }
+
+.footer__tagline { font-size: 0.8rem; color: var(--clr-text-dim); letter-spacing: 0.05em; }
+
+.footer__links { display: flex; flex-direction: column; gap: 0.75rem; }
+
+.footer__links a {
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--clr-text-muted);
+  transition: color 0.3s ease;
+}
+
+.footer__links a:hover { color: var(--clr-accent); }
+
+.footer__contact { display: flex; flex-direction: column; gap: 0.75rem; }
+
+.footer__contact-link {
+  font-size: 0.8rem;
+  color: var(--clr-text-dim);
+  transition: color 0.3s ease;
+}
+
+.footer__contact-link:hover { color: var(--clr-accent); }
+
+.footer__lang-switch {
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  color: var(--clr-text-dim);
+  border-top: 1px solid var(--clr-border);
+  padding-top: 0.75rem;
+}
+
+.footer__bottom {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 2rem;
+  border-top: 1px solid var(--clr-border);
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.footer__bottom p { font-size: 0.72rem; color: var(--clr-text-dim); }
+
+.footer__dev-link { color: var(--clr-accent); transition: opacity 0.3s ease; }
+.footer__dev-link:hover { opacity: 0.7; }
+
+@media (max-width: 768px) {
+  .footer__inner { grid-template-columns: 1fr 1fr; }
+  .footer__brand { grid-column: 1 / -1; }
+}
+
+@media (max-width: 600px) {
+  .footer__inner { grid-template-columns: 1fr; gap: 2rem; }
+  .footer__links { flex-direction: row; flex-wrap: wrap; gap: 1rem; }
+  .footer__bottom { flex-direction: column; gap: 0.5rem; }
+}
+</style>

@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm create:*)",
+      "Read(//usr/local/bin/**)",
+      "Bash(nvm list:*)",
+      "Bash(nvm install:*)",
+      "Bash(nvm use:*)",
+      "Bash(~/.nvm/versions/node/v18.18.0/bin/node --version)",
+      "Bash(~/.nvm/versions/node/v18.18.0/bin/npm --version)",
+      "Bash(~/.nvm/versions/node/v18.18.0/bin/npx create-astro@4 . --template minimal --install --no-git)",
+      "Bash(~/.nvm/versions/node/v18.18.0/bin/npm install:*)",
+      "Bash(~/.nvm/versions/node/v18.18.0/bin/npm run:*)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(git --version)",
+      "Bash(gh --version)",
+      "Bash(gh auth:*)",
+      "Bash(/Users/admirdemir/Projects/sabrinacaber-com-astro/.gitignore:*)",
+      "Bash(git init:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
+    ]
+  }
+}

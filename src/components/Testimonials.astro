@@ -1,0 +1,175 @@
+---
+// Testimonials section
+const testimonials = [
+  {
+    quote: "Sabrina n'a pas simplement dessiné notre marque — elle a exhumé ce qui nous rendait véritablement uniques et lui a donné un langage visuel que nous n'aurions jamais pu imaginer seuls.",
+    name: "Céline Moreau",
+    title: "Fondatrice, Lumière Collective",
+    location: "Paris, FR",
+  },
+  {
+    quote: "Travailler avec Sabrina a été une expérience transformatrice. Elle a apporté rigueur stratégique et vision artistique à parts égales — notre marque a accédé à des marchés entièrement nouveaux.",
+    name: "James Whitfield",
+    title: "Associé directeur, Axiom Capital",
+    location: "Londres, UK",
+  },
+  {
+    quote: "La profondeur de compréhension que Sabrina a apportée à notre brief était extraordinaire. Chaque décision de design était ancrée dans nos valeurs et notre audience — et ça se voit.",
+    name: "Amara Osei",
+    title: "Directrice créative, Botanica Rituals",
+    location: "New York, US",
+  },
+];
+---
+
+<section class="testimonials">
+  <div class="testimonials__bg" aria-hidden="true"></div>
+
+  <div class="container">
+    <div class="testimonials__header">
+      <span class="tag">Ils témoignent</span>
+      <div class="divider"></div>
+      <h2 class="testimonials__title">
+        Ce que disent<br />
+        <em class="gradient-text">mes clients</em>
+      </h2>
+    </div>
+
+    <div class="testimonials__grid">
+      {testimonials.map((t) => (
+        <div class="testimonial-card">
+          <div class="testimonial-card__quote-mark">"</div>
+          <blockquote class="testimonial-card__text">
+            {t.quote}
+          </blockquote>
+          <footer class="testimonial-card__footer">
+            <div class="testimonial-card__avatar">
+              {t.name.split(' ').map(n => n[0]).join('')}
+            </div>
+            <div>
+              <p class="testimonial-card__name">{t.name}</p>
+              <p class="testimonial-card__role">{t.title}</p>
+            </div>
+            <span class="testimonial-card__location">{t.location}</span>
+          </footer>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+.testimonials {
+  overflow: hidden;
+}
+
+.testimonials__bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 0%, rgba(20, 13, 36, 0.5) 50%, transparent 100%);
+  pointer-events: none;
+}
+
+.testimonials__header {
+  text-align: center;
+  margin-bottom: clamp(3rem, 6vw, 6rem);
+}
+
+.testimonials__header .tag { display: inline-block; }
+.testimonials__header .divider { margin: 1.5rem auto; }
+
+.testimonials__title {
+  color: var(--clr-white);
+}
+
+.testimonials__title em { font-style: italic; }
+
+.testimonials__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.testimonial-card {
+  background: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  padding: 2.5rem;
+  position: relative;
+  transition: all 0.4s var(--ease-out);
+}
+
+.testimonial-card:hover {
+  border-color: var(--clr-purple-mid);
+  background: var(--clr-surface-2);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 60px rgba(74, 45, 140, 0.15);
+}
+
+.testimonial-card__quote-mark {
+  font-family: var(--font-display);
+  font-size: 5rem;
+  line-height: 1;
+  color: var(--clr-purple-mid);
+  opacity: 0.3;
+  margin-bottom: -1rem;
+  display: block;
+}
+
+.testimonial-card__text {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--clr-text);
+  line-height: 1.7;
+  margin-bottom: 2rem;
+  quotes: none;
+}
+
+.testimonial-card__footer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border-top: 1px solid var(--clr-border);
+  padding-top: 1.5rem;
+}
+
+.testimonial-card__avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--clr-purple), var(--clr-accent-glow));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--clr-white);
+  flex-shrink: 0;
+  letter-spacing: 0.05em;
+}
+
+.testimonial-card__name {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--clr-white);
+  margin-bottom: 0.1rem;
+}
+
+.testimonial-card__role {
+  font-size: 0.72rem;
+  color: var(--clr-text-dim);
+}
+
+.testimonial-card__location {
+  margin-left: auto;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  color: var(--clr-text-dim);
+  text-transform: uppercase;
+}
+
+@media (max-width: 900px) {
+  .testimonials__grid { grid-template-columns: 1fr; max-width: 560px; margin: 0 auto; }
+}
+</style>

@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "Sabrina Caber Dev",
+      "runtimeExecutable": "/Users/admirdemir/.nvm/versions/node/v18.18.0/bin/node",
+      "runtimeArgs": ["node_modules/.bin/astro", "dev", "--host"],
+      "port": 4321
+    }
+  ]
+}

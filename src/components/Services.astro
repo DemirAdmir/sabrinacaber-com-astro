@@ -1,0 +1,187 @@
+---
+import { translations, type Lang } from '../i18n/translations';
+interface Props { lang?: Lang; }
+const { lang = 'en' } = Astro.props;
+const t = translations[lang].services;
+---
+
+<section id="services" class="services">
+  <div class="services__bg" aria-hidden="true"></div>
+  <div class="container">
+    <div class="services__header">
+      <span class="tag">{t.tag}</span>
+      <div class="divider"></div>
+      <h2 class="services__title">
+        {t.titleLine1}<br />
+        <em class="gradient-text">{t.titleLine2}</em>
+      </h2>
+      <p class="services__subtitle">
+        {t.subtitle.split('\n').map((line, i, arr) => (
+          i < arr.length - 1 ? <>{line}<br /></> : line
+        ))}
+      </p>
+    </div>
+
+    <div class="services__grid">
+      {t.items.map((s) => (
+        <div class="service-card">
+          <div class="service-card__header">
+            <span class="service-card__number">{s.number}</span>
+            <div class="service-card__line"></div>
+          </div>
+          <h3 class="service-card__title">{s.title}</h3>
+          <p class="service-card__desc">{s.description}</p>
+          <div class="service-card__tags">
+            {s.tags.map(tag => <span class="tag">{tag}</span>)}
+          </div>
+          <div class="service-card__arrow">→</div>
+        </div>
+      ))}
+    </div>
+
+    <div class="services__cta-row">
+      <p>{t.ctaQuestion}</p>
+      <a href="#contact" class="btn btn-primary"><span>{t.ctaBtn}</span></a>
+    </div>
+  </div>
+</section>
+
+<style>
+.services { overflow: hidden; clip-path: inset(0); }
+
+.services__bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(74, 45, 140, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 50%, rgba(155, 79, 255, 0.06) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.services__header { max-width: 600px; margin-bottom: clamp(3rem, 6vw, 6rem); }
+.services__title { margin: 1.5rem 0 1.25rem; color: var(--clr-white); }
+.services__title em { font-style: italic; }
+.services__subtitle { line-height: 1.7; }
+
+/* 5-card 3+2 centered grid using 6 phantom columns */
+.services__grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 1px;
+  background: var(--clr-border);
+  border: 1px solid var(--clr-border);
+}
+
+.service-card { grid-column: span 2; }
+
+/* Last 2 cards: position in cols 2-3 and 4-5 of 6 → centered */
+.service-card:nth-child(4) { grid-column: 2 / span 2; }
+.service-card:nth-child(5) { grid-column: 4 / span 2; }
+
+.service-card {
+  background: var(--clr-bg);
+  padding: clamp(2rem, 4vw, 3.5rem);
+  position: relative;
+  cursor: default;
+  transition: background 0.4s var(--ease-out);
+  overflow: hidden;
+  min-width: 0;
+}
+
+.service-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(74, 45, 140, 0.06) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.4s var(--ease-out);
+}
+
+.service-card:hover { background: var(--clr-surface); }
+.service-card:hover::before { opacity: 1; }
+
+.service-card__header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
+
+.service-card__number {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--clr-accent);
+  letter-spacing: 0.1em;
+}
+
+.service-card__line {
+  flex: 1;
+  height: 1px;
+  background: var(--clr-border);
+  transition: background 0.4s ease;
+}
+
+.service-card:hover .service-card__line {
+  background: linear-gradient(90deg, var(--clr-accent), transparent);
+}
+
+.service-card__title {
+  font-size: clamp(1.1rem, 1.8vw, 1.5rem);
+  font-weight: 300;
+  color: var(--clr-white);
+  margin-bottom: 1rem;
+  transition: color 0.3s ease;
+}
+
+.service-card:hover .service-card__title { color: var(--clr-purple-pale); }
+
+.service-card__desc { margin-bottom: 1.5rem; font-size: 0.9rem; line-height: 1.8; }
+
+.service-card__tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.5rem; }
+
+.service-card__arrow {
+  font-size: 1.2rem;
+  color: var(--clr-text-dim);
+  transform: translateX(-5px);
+  transition: all 0.4s var(--ease-out);
+  opacity: 0;
+}
+
+.service-card:hover .service-card__arrow {
+  transform: translateX(0);
+  opacity: 1;
+  color: var(--clr-accent);
+}
+
+.services__cta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4rem;
+  padding-top: 3rem;
+  border-top: 1px solid var(--clr-border);
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.services__cta-row p {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 300;
+  color: var(--clr-white);
+  font-style: italic;
+}
+
+/* Tablet: 2-col, reset custom positioning, 5th card spans 2 */
+@media (max-width: 1024px) {
+  .services__grid { grid-template-columns: repeat(2, 1fr); }
+  .service-card { grid-column: auto; }
+  .service-card:nth-child(4) { grid-column: auto; }
+  .service-card:nth-child(5) { grid-column: 1 / -1; }
+  .service-card { padding: 2rem 1.5rem; }
+}
+
+/* Mobile: 1-col */
+@media (max-width: 600px) {
+  .services__grid { grid-template-columns: 1fr; }
+  .service-card:nth-child(5) { grid-column: auto; }
+  .services__cta-row { flex-direction: column; align-items: flex-start; }
+  .service-card__arrow { opacity: 1; transform: translateX(0); }
+}
+</style>
