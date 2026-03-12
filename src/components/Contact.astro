@@ -47,7 +47,26 @@ const t = translations[lang].contact;
         </div>
 
         <div class="contact__social">
-          {t.social.map((s) => <a href="#" class="contact__social-link">{s}</a>)}
+          {t.social.map((s) => (
+            <a href={s.url} target="_blank" rel="noopener noreferrer" class="contact__social-link">{s.label}</a>
+          ))}
+        </div>
+
+        <!-- Calendly booking -->
+        <div class="contact__calendly">
+          <p class="contact__calendly-note">{t.calendly.note}</p>
+          <a
+            href={t.calendly.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn btn-primary contact__calendly-btn"
+          >
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <rect x="2" y="3" width="12" height="11" rx="1" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M2 7h12M5 1v4M11 1v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            <span>{t.calendly.label}</span>
+          </a>
         </div>
       </div>
 
@@ -237,6 +256,28 @@ a.contact__detail-value:hover { color: var(--clr-accent); }
 .form-select option { background: var(--clr-bg); color: var(--clr-text); }
 .form-textarea { resize: vertical; min-height: 130px; }
 .contact__submit { width: 100%; justify-content: center; }
+
+.contact__calendly {
+  margin-top: 2.5rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid var(--clr-border);
+}
+
+.contact__calendly-note {
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--clr-text-dim);
+  margin-bottom: 1rem;
+}
+
+.contact__calendly-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  justify-content: center;
+}
 
 @media (max-width: 900px) { .contact__grid { grid-template-columns: 1fr; } }
 

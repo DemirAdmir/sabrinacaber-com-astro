@@ -180,7 +180,14 @@ export const translations = {
       },
       languagesValue: 'French · English · Bosnian',
       availableText: 'Available for new projects',
-      social: ['LinkedIn', 'Instagram'],
+      social: [
+        { label: 'LinkedIn', url: 'https://linkedin.com/in/sabrinacaber' },
+      ],
+      calendly: {
+        url: 'https://calendly.com/sabrinacaber',
+        label: 'Book a Discovery Call',
+        note: 'Free 30-minute intro call',
+      },
       form: {
         nameLabel: 'Your Name',
         namePlaceholder: 'Jane Smith',
@@ -389,7 +396,14 @@ export const translations = {
       },
       languagesValue: 'Français · Anglais · Bosnien',
       availableText: 'Disponible pour de nouveaux projets',
-      social: ['LinkedIn', 'Instagram'],
+      social: [
+        { label: 'LinkedIn', url: 'https://linkedin.com/in/sabrinacaber' },
+      ],
+      calendly: {
+        url: 'https://calendly.com/sabrinacaber',
+        label: 'Réserver un appel découverte',
+        note: 'Appel intro gratuit de 30 minutes',
+      },
       form: {
         nameLabel: 'Votre nom',
         namePlaceholder: 'Marie Dupont',

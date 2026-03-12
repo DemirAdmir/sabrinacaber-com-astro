@@ -18,7 +18,14 @@
       "Bash(/Users/admirdemir/Projects/sabrinacaber-com-astro/.gitignore:*)",
       "Bash(git init:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(gh repo:*)",
+      "Bash(/Users/admirdemir/Projects/sabrinacaber-com-astro/netlify.toml:*)",
+      "Bash(git push:*)",
+      "Bash(~/.nvm/versions/node/v18.18.0/bin/npx netlify:*)",
+      "Bash(netlify status:*)",
+      "Bash(netlify deploy:*)",
+      "WebFetch(domain:www.sabrinacaber.com)"
     ]
   }
 }
