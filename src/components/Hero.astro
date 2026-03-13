@@ -14,7 +14,7 @@ const t = translations[lang].hero;
       <span class="tag">{t.tag2}</span>
     </div>
 
-    <h1 class="hero__title fade-up">
+    <h1 class="hero__title">
       <span class="hero__title-line">{t.titleLine1}</span>
       <span class="hero__title-line hero__title-accent gradient-text">{t.titleLine2}</span>
     </h1>
@@ -645,6 +645,7 @@ animate();
 
 // ─── GSAP entrance ────────────────────────────────────────────
 gsap.set('.fade-up', { opacity: 0, y: 40 });
+gsap.set('.hero__title-line', { opacity: 0, y: 40 });
 gsap.set('.fade-in', { opacity: 0 });
 const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 tl.to('.hero__eyebrow',          { opacity: 1, y: 0, duration: 0.9, delay: 0.5 })
