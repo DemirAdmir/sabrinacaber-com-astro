@@ -8,6 +8,11 @@ const t = translations[lang].hero;
 <section id="home" class="hero">
   <canvas id="hero-canvas" aria-hidden="true"></canvas>
 
+  <!-- Typewriter: AI writing effect, right side desktop only -->
+  <div class="hero__typewriter" aria-hidden="true">
+    <span id="typewriter-text"></span><span class="hero__cursor">|</span>
+  </div>
+
   <div class="hero__content container">
     <div class="hero__eyebrow fade-up">
       <span class="tag">{t.tag1}</span>
@@ -60,10 +65,39 @@ const t = translations[lang].hero;
   pointer-events: none;
 }
 
-@media (max-width: 900px) {
-  #hero-canvas { opacity: 0.45; }
+/* ── Typewriter ─────────────────────────────────── */
+.hero__typewriter {
+  position: absolute;
+  right: clamp(3rem, 10vw, 10rem);
+  top: 50%;
+  transform: translateY(-60%);
+  z-index: 1;
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 5vw, 4.8rem);
+  color: var(--clr-purple-pale);
+  opacity: 0.28;
+  pointer-events: none;
+  white-space: nowrap;
+  letter-spacing: -0.02em;
+  font-style: italic;
 }
 
+.hero__cursor {
+  color: var(--clr-accent);
+  opacity: 0.7;
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 0.7; }
+  50%       { opacity: 0; }
+}
+
+@media (max-width: 1000px) {
+  .hero__typewriter { display: none; }
+}
+
+/* ── Content ────────────────────────────────────── */
 .hero__content {
   position: relative;
   z-index: 2;
@@ -125,7 +159,7 @@ const t = translations[lang].hero;
 
 @keyframes scrollPulse {
   0%, 100% { transform: scaleY(1); opacity: 0.8; }
-  50% { transform: scaleY(0.5); opacity: 0.25; }
+  50%       { transform: scaleY(0.5); opacity: 0.25; }
 }
 
 .hero__scroll-indicator span {
@@ -136,14 +170,13 @@ const t = translations[lang].hero;
   writing-mode: vertical-rl;
 }
 
+/* ── Marquee ────────────────────────────────────── */
 .hero__marquee {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  bottom: 0; left: 0; right: 0;
   overflow: hidden;
   border-top: 1px solid var(--clr-border);
-  background: rgba(7, 16, 28, 0.7);
+  background: rgba(11, 10, 30, 0.75);
   backdrop-filter: blur(12px);
   padding: 0.9rem 0;
 }
@@ -172,7 +205,7 @@ const t = translations[lang].hero;
 
 @keyframes marquee {
   from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+  to   { transform: translateX(-50%); }
 }
 
 @media (max-width: 768px) {
@@ -197,152 +230,84 @@ import { gsap } from 'gsap';
 
 // ─── Renderer ────────────────────────────────────────────────
 const canvas = document.getElementById('hero-canvas') as HTMLCanvasElement;
-const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: false });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setSize(window.innerWidth, window.innerHeight);
 
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(44, window.innerWidth / window.innerHeight, 0.1, 100);
-camera.position.set(0, 0, 7.5);
+const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 100);
+camera.position.set(0, 0, 6);
 
-// ─── Globe Group ─────────────────────────────────────────────
-const globeGroup = new THREE.Group();
-globeGroup.rotation.z = 0.38; // axial tilt, like Earth
-scene.add(globeGroup);
+// ─── Character set (EN + FR) ─────────────────────────────────
+const CHARS = [
+  'A','B','C','D','E','F','G','H','I','J','K','L','M',
+  'N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
+  'À','Â','Æ','Ç','É','È','Ê','Ë','Î','Ï','Ô','Œ','Ù','Û','Ü',
+  '.', ',', '?', '!', '"', '—',
+];
 
-const R = 2.1; // globe radius
-const BG_COLOR = 0x0b0a1e; // matches --clr-bg
-
-function updateGlobeLayout() {
-  if (window.innerWidth > 900) {
-    globeGroup.position.x = 2.2;
-    globeGroup.position.y = 0;
-  } else {
-    globeGroup.position.x = 0;
-    globeGroup.position.y = -0.3;
-  }
-}
-updateGlobeLayout();
-
-// ─── Occluder: solid sphere to hide back-side elements ───────
-const occluder = new THREE.Mesh(
-  new THREE.SphereGeometry(R * 0.982, 36, 26),
-  new THREE.MeshBasicMaterial({ color: BG_COLOR })
-);
-globeGroup.add(occluder);
-
-// ─── Wireframe grid ──────────────────────────────────────────
-const wireGeo = new THREE.SphereGeometry(R, 42, 28);
-const wireMat = new THREE.MeshBasicMaterial({
-  color: 0x2e298a,
-  wireframe: true,
-  transparent: true,
-  opacity: 0.11,
-});
-globeGroup.add(new THREE.Mesh(wireGeo, wireMat));
-
-// ─── Atmospheric halo ─────────────────────────────────────────
-const haloGeo = new THREE.SphereGeometry(R * 1.14, 32, 24);
-const haloMat = new THREE.MeshBasicMaterial({
-  color: 0x4c45b8,
-  transparent: true,
-  opacity: 0.05,
-  side: THREE.BackSide,
-  depthWrite: false,
-});
-globeGroup.add(new THREE.Mesh(haloGeo, haloMat));
-
-// ─── Surface nodes ───────────────────────────────────────────
-const NODE_COUNT = 190;
-const nodePositions: THREE.Vector3[] = [];
-const nodePosArr = new Float32Array(NODE_COUNT * 3);
-
-for (let i = 0; i < NODE_COUNT; i++) {
-  const theta = Math.random() * Math.PI * 2;
-  const phi   = Math.acos(2 * Math.random() - 1);
-  const x = R * Math.sin(phi) * Math.cos(theta);
-  const y = R * Math.cos(phi);
-  const z = R * Math.sin(phi) * Math.sin(theta);
-  nodePositions.push(new THREE.Vector3(x, y, z));
-  nodePosArr[i * 3]     = x;
-  nodePosArr[i * 3 + 1] = y;
-  nodePosArr[i * 3 + 2] = z;
+// ─── Build one canvas texture per unique character ────────────
+function makeCharTex(char: string): THREE.CanvasTexture {
+  const c = document.createElement('canvas');
+  c.width = 64; c.height = 64;
+  const ctx = c.getContext('2d')!;
+  ctx.fillStyle = 'rgba(196, 186, 245, 0.95)';
+  ctx.font = 'italic 46px serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(char, 32, 32);
+  return new THREE.CanvasTexture(c);
 }
 
-const nodeGeo = new THREE.BufferGeometry();
-nodeGeo.setAttribute('position', new THREE.BufferAttribute(nodePosArr, 3));
-const nodeMat = new THREE.PointsMaterial({
-  color: 0x7c5ce8,
-  size: 0.04,
-  transparent: true,
-  opacity: 0.85,
-  sizeAttenuation: true,
-});
-globeGroup.add(new THREE.Points(nodeGeo, nodeMat));
+const texCache: THREE.CanvasTexture[] = CHARS.map(makeCharTex);
 
-// ─── Arc connections ─────────────────────────────────────────
-const ARC_COUNT = 22;
-
-interface ArcData {
-  curve: THREE.QuadraticBezierCurve3;
-  progress: number;
+// ─── Floating sprite data ─────────────────────────────────────
+interface SpriteEntry {
+  sprite: THREE.Sprite;
+  vx: number;
+  vy: number;
+  phase: number;
   speed: number;
-  dot: THREE.Mesh;
+  base: number;
 }
 
-const arcData: ArcData[] = [];
+const isMobile = window.innerWidth <= 768;
+const COUNT = isMobile ? 55 : 110;
+const entries: SpriteEntry[] = [];
 
-for (let i = 0; i < ARC_COUNT; i++) {
-  let ai = Math.floor(Math.random() * NODE_COUNT);
-  let bi = Math.floor(Math.random() * NODE_COUNT);
-  while (bi === ai) bi = Math.floor(Math.random() * NODE_COUNT);
-
-  const a = nodePositions[ai];
-  const b = nodePositions[bi];
-
-  // Control point: midpoint direction elevated above sphere surface
-  const ctrl = new THREE.Vector3()
-    .addVectors(a, b)
-    .normalize()
-    .multiplyScalar(R + R * (0.3 + Math.random() * 0.55));
-
-  const curve = new THREE.QuadraticBezierCurve3(a.clone(), ctrl, b.clone());
-  const pts   = curve.getPoints(80);
-
-  // Arc line
-  const lineGeo = new THREE.BufferGeometry().setFromPoints(pts);
-  const lineMat = new THREE.LineBasicMaterial({
-    color: 0x4c45b8,
-    transparent: true,
-    opacity: 0.15 + Math.random() * 0.15,
-  });
-  globeGroup.add(new THREE.Line(lineGeo, lineMat));
-
-  // Traveling dot
-  const dotGeo = new THREE.SphereGeometry(0.026, 7, 7);
-  const dotMat = new THREE.MeshBasicMaterial({
-    color: 0xc4bdf5,
+for (let i = 0; i < COUNT; i++) {
+  const tex = texCache[Math.floor(Math.random() * texCache.length)];
+  const mat = new THREE.SpriteMaterial({
+    map: tex,
     transparent: true,
     opacity: 0,
+    depthWrite: false,
+    blending: THREE.NormalBlending,
   });
-  const dot = new THREE.Mesh(dotGeo, dotMat);
-  globeGroup.add(dot);
-
-  arcData.push({
-    curve,
-    progress: Math.random(),
-    speed: 0.0022 + Math.random() * 0.0035,
-    dot,
+  const sp = new THREE.Sprite(mat);
+  const scale = 0.12 + Math.random() * 0.52;
+  sp.scale.set(scale, scale, 1);
+  sp.position.set(
+    (Math.random() - 0.5) * 20,
+    (Math.random() - 0.5) * 11,
+    (Math.random() - 0.5) * 5,
+  );
+  scene.add(sp);
+  entries.push({
+    sprite: sp,
+    vx: (Math.random() - 0.5) * 0.0035,
+    vy: (Math.random() - 0.5) * 0.0025,
+    phase: Math.random() * Math.PI * 2,
+    speed: 0.18 + Math.random() * 0.45,
+    base: 0.04 + Math.random() * 0.18,
   });
 }
 
 // ─── Mouse parallax ──────────────────────────────────────────
-let mouseX = 0, mouseY = 0;
-let targetX = 0, targetY = 0;
-
+let mx = 0, my = 0, tx = 0, ty = 0;
 document.addEventListener('mousemove', (e) => {
-  targetX = (e.clientX / window.innerWidth - 0.5) * 2;
-  targetY = (e.clientY / window.innerHeight - 0.5) * 2;
+  tx = (e.clientX / window.innerWidth  - 0.5) * 2;
+  ty = (e.clientY / window.innerHeight - 0.5) * 2;
 });
 
 // ─── Resize ──────────────────────────────────────────────────
@@ -350,7 +315,6 @@ window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
-  updateGlobeLayout();
 });
 
 // ─── Animation loop ──────────────────────────────────────────
@@ -360,46 +324,82 @@ function animate() {
   requestAnimationFrame(animate);
   const elapsed = clock.getElapsedTime();
 
-  // Smooth mouse tracking
-  mouseX += (targetX - mouseX) * 0.035;
-  mouseY += (targetY - mouseY) * 0.035;
-
-  // Globe rotation: steady spin + mouse tilt
-  globeGroup.rotation.y = elapsed * 0.072;
-  globeGroup.rotation.x = mouseY * 0.12;
+  // Smooth mouse
+  mx += (tx - mx) * 0.04;
+  my += (ty - my) * 0.04;
 
   // Subtle camera parallax
-  camera.position.x += (mouseX * 0.35 - camera.position.x) * 0.04;
-  camera.position.y += (-mouseY * 0.22 - camera.position.y) * 0.04;
+  camera.position.x += (mx * 0.9 - camera.position.x) * 0.05;
+  camera.position.y += (-my * 0.55 - camera.position.y) * 0.05;
   camera.lookAt(scene.position);
 
-  // Update traveling particles
-  arcData.forEach((arc) => {
-    arc.progress += arc.speed;
-    if (arc.progress > 1) arc.progress = 0;
+  // Update sprites
+  entries.forEach((e) => {
+    e.sprite.position.x += e.vx;
+    e.sprite.position.y += e.vy;
 
-    const pos = arc.curve.getPoint(arc.progress);
-    arc.dot.position.copy(pos);
+    // Wrap around viewport bounds
+    if (e.sprite.position.x >  10.5) e.sprite.position.x = -10.5;
+    if (e.sprite.position.x < -10.5) e.sprite.position.x =  10.5;
+    if (e.sprite.position.y >   6.2) e.sprite.position.y =  -6.2;
+    if (e.sprite.position.y <  -6.2) e.sprite.position.y =   6.2;
 
-    // Fade in/out near endpoints
-    const fade = Math.sin(arc.progress * Math.PI);
-    (arc.dot.material as THREE.MeshBasicMaterial).opacity = fade * 0.92;
+    // Pulse opacity
+    const p = 0.5 + 0.5 * Math.sin(elapsed * e.speed + e.phase);
+    (e.sprite.material as THREE.SpriteMaterial).opacity = e.base * (0.25 + p * 0.75);
   });
 
   renderer.render(scene, camera);
 }
 animate();
 
+// ─── Typewriter ───────────────────────────────────────────────
+const words = [
+  'Translate.', 'Rédiger.', 'Create.',
+  'Traduire.', 'Write.',   'Optimise.',
+  'Créer.',    'Craft.',   'Corriger.',
+];
+const twEl = document.getElementById('typewriter-text') as HTMLElement | null;
+
+if (twEl) {
+  let wIdx = 0, cIdx = 0, deleting = false;
+
+  function step() {
+    const word = words[wIdx];
+    if (!deleting) {
+      cIdx++;
+      twEl!.textContent = word.slice(0, cIdx);
+      if (cIdx === word.length) {
+        deleting = true;
+        setTimeout(step, 1600);
+      } else {
+        setTimeout(step, 85);
+      }
+    } else {
+      cIdx--;
+      twEl!.textContent = word.slice(0, cIdx);
+      if (cIdx === 0) {
+        deleting = false;
+        wIdx = (wIdx + 1) % words.length;
+        setTimeout(step, 280);
+      } else {
+        setTimeout(step, 45);
+      }
+    }
+  }
+  setTimeout(step, 1400);
+}
+
 // ─── GSAP entrance ───────────────────────────────────────────
 gsap.set('.fade-up', { opacity: 0, y: 40 });
 gsap.set('.fade-in', { opacity: 0 });
 
 const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-tl.to('.hero__eyebrow',        { opacity: 1, y: 0, duration: 0.9, delay: 0.5 })
-  .to('.hero__title-line',     { opacity: 1, y: 0, duration: 1,   stagger: 0.2 }, '-=0.5')
-  .to('.hero__subtitle',       { opacity: 1, y: 0, duration: 0.9 }, '-=0.5')
-  .to('.hero__actions',        { opacity: 1, y: 0, duration: 0.8 }, '-=0.4')
-  .to('.hero__scroll-indicator', { opacity: 1, duration: 0.8 }, '-=0.2');
+tl.to('.hero__eyebrow',          { opacity: 1, y: 0, duration: 0.9, delay: 0.5 })
+  .to('.hero__title-line',       { opacity: 1, y: 0, duration: 1,   stagger: 0.2 }, '-=0.5')
+  .to('.hero__subtitle',         { opacity: 1, y: 0, duration: 0.9 }, '-=0.5')
+  .to('.hero__actions',          { opacity: 1, y: 0, duration: 0.8 }, '-=0.4')
+  .to('.hero__scroll-indicator', { opacity: 1, duration: 0.8 },       '-=0.2');
 
 // Pause marquee on hover
 const marquee = document.querySelector('.hero__marquee-track') as HTMLElement | null;
