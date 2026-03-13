@@ -84,4 +84,15 @@ function animateCounter(el: HTMLElement) {
 }
 
 document.querySelectorAll<HTMLElement>('.about__stat-num').forEach(animateCounter);
+
+// ─── Section detection → avatar reactions ─────────────────────
+['home', 'about', 'services', 'work', 'contact'].forEach((id) => {
+  ScrollTrigger.create({
+    trigger: `#${id}`,
+    start: 'top 50%',
+    end: 'bottom 50%',
+    onEnter:     () => window.dispatchEvent(new CustomEvent('section-active', { detail: id })),
+    onEnterBack: () => window.dispatchEvent(new CustomEvent('section-active', { detail: id })),
+  });
+});
 </script>

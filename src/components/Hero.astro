@@ -264,7 +264,7 @@ for (let i = 0; i < LETTER_COUNT; i++) {
   sp.position.set(
     (Math.random() - 0.5) * 22,
     (Math.random() - 0.5) * 12,
-    -4 - Math.random() * 4,        // push behind avatar
+    -4 - Math.random() * 4,
   );
   scene.add(sp);
   letters.push({
@@ -292,14 +292,148 @@ scene.add(avatarGroup);
 let avatarReady = false;
 
 interface Bones {
-  head:     THREE.Object3D | null;
-  neck:     THREE.Object3D | null;
-  spine:    THREE.Object3D | null;
-  leftArm:  THREE.Object3D | null;
-  rightArm: THREE.Object3D | null;
+  head:          THREE.Object3D | null;
+  neck:          THREE.Object3D | null;
+  spine:         THREE.Object3D | null;
+  hips:          THREE.Object3D | null;
+  leftShoulder:  THREE.Object3D | null;
+  rightShoulder: THREE.Object3D | null;
+  leftArm:       THREE.Object3D | null;
+  rightArm:      THREE.Object3D | null;
+  leftForeArm:   THREE.Object3D | null;
+  rightForeArm:  THREE.Object3D | null;
+  leftHand:      THREE.Object3D | null;
+  rightHand:     THREE.Object3D | null;
 }
-const bones: Bones = { head: null, neck: null, spine: null, leftArm: null, rightArm: null };
+const bones: Bones = {
+  head: null, neck: null, spine: null, hips: null,
+  leftShoulder: null, rightShoulder: null,
+  leftArm: null, rightArm: null,
+  leftForeArm: null, rightForeArm: null,
+  leftHand: null, rightHand: null,
+};
 
+// ─── Pose blending system ────────────────────────────────────
+interface Vec3 { x: number; y: number; z: number; }
+const poseTargets: Record<string, Vec3> = {};
+const restRotations: Record<string, Vec3> = {};
+let poseWeight = 0;
+
+function ensureTarget(name: string): Vec3 {
+  if (!poseTargets[name]) poseTargets[name] = { x: 0, y: 0, z: 0 };
+  return poseTargets[name];
+}
+
+function storeRestRotations() {
+  const boneNames = Object.keys(bones) as (keyof Bones)[];
+  boneNames.forEach((name) => {
+    const bone = bones[name];
+    if (bone) {
+      restRotations[name] = {
+        x: bone.rotation.x,
+        y: bone.rotation.y,
+        z: bone.rotation.z,
+      };
+    }
+  });
+}
+
+// Section → bone rotation offsets
+const POSES: Record<string, Record<string, Partial<Vec3>>> = {
+  about: {
+    rightArm:     { z: -0.3 },
+    rightForeArm: { z: -1.6 },
+    rightHand:    { x: 0.2 },
+    head:         { x: 0.08 },
+  },
+  services: {
+    leftArm:     { z: 0.7 },
+    leftForeArm: { z: 0.6 },
+    leftHand:    { x: -0.3 },
+    spine:       { z: 0.03 },
+  },
+  work: {
+    leftArm:      { z: 0.5, x: 0.4 },
+    rightArm:     { z: -0.5, x: 0.4 },
+    leftForeArm:  { z: 1.2 },
+    rightForeArm: { z: -1.2 },
+    spine:        { z: -0.02 },
+  },
+  contact: {
+    leftArm:      { z: 0.6 },
+    rightArm:     { z: -0.6 },
+    leftForeArm:  { z: 0.3 },
+    rightForeArm: { z: -0.3 },
+    leftHand:     { x: -0.2 },
+    rightHand:    { x: 0.2 },
+    spine:        { x: 0.04 },
+  },
+};
+
+// ─── Pose transition manager ─────────────────────────────────
+let currentPose: string | null = null;
+let poseTimeline: gsap.core.Timeline | null = null;
+let greetingDone = false;
+
+function setAvatarPose(sectionId: string) {
+  if (sectionId === currentPose) return;
+  if (!greetingDone) return;           // don't interrupt wave
+  currentPose = sectionId;
+
+  if (poseTimeline) poseTimeline.kill();
+
+  const pose = POSES[sectionId] ?? {};
+
+  poseTimeline = gsap.timeline();
+
+  // Return to idle for home
+  if (sectionId === 'home') {
+    Object.keys(poseTargets).forEach((boneName) => {
+      poseTimeline!.to(poseTargets[boneName], {
+        x: 0, y: 0, z: 0, duration: 0.8, ease: 'power2.inOut',
+      }, 0);
+    });
+    poseTimeline.to({ pw: poseWeight }, {
+      pw: 0, duration: 0.8, ease: 'power2.inOut',
+      onUpdate() { poseWeight = (this as any).targets()[0].pw; },
+    }, 0);
+    return;
+  }
+
+  // Reset untargeted bones to zero
+  Object.keys(poseTargets).forEach((boneName) => {
+    if (!pose[boneName]) {
+      poseTimeline!.to(poseTargets[boneName], {
+        x: 0, y: 0, z: 0, duration: 0.7, ease: 'power2.inOut',
+      }, 0);
+    }
+  });
+
+  // Tween targeted bones to pose values
+  Object.entries(pose).forEach(([boneName, target]) => {
+    const pt = ensureTarget(boneName);
+    poseTimeline!.to(pt, {
+      x: target.x ?? 0,
+      y: target.y ?? 0,
+      z: target.z ?? 0,
+      duration: 0.7,
+      ease: 'power2.inOut',
+    }, 0);
+  });
+
+  // Tween poseWeight to 1
+  poseTimeline.to({ pw: poseWeight }, {
+    pw: 1, duration: 0.7, ease: 'power2.inOut',
+    onUpdate() { poseWeight = (this as any).targets()[0].pw; },
+  }, 0);
+}
+
+// ─── Listen for section-active events from ScrollTrigger ─────
+window.addEventListener('section-active', ((e: CustomEvent<string>) => {
+  setAvatarPose(e.detail);
+}) as EventListener);
+
+// ─── Load avatar ─────────────────────────────────────────────
 const gltfLoader = new GLTFLoader();
 gltfLoader.load(
   AVATAR_URL,
@@ -307,7 +441,6 @@ gltfLoader.load(
     const model = gltf.scene;
     model.scale.setScalar(1.45);
 
-    // Collect all materials and start them at opacity 0
     const mats: THREE.MeshStandardMaterial[] = [];
     model.traverse((node) => {
       const n = node as THREE.Mesh;
@@ -322,19 +455,66 @@ gltfLoader.load(
       }
       // Capture bones
       const name = node.name;
-      if (name === 'Head')                         bones.head     = node;
-      if (name === 'Neck')                         bones.neck     = node;
+      if (name === 'Head')          bones.head          = node;
+      if (name === 'Neck')          bones.neck          = node;
+      if (name === 'Hips')          bones.hips          = node;
       if (name === 'Spine2' || (!bones.spine && name === 'Spine1')) bones.spine = node;
-      if (name === 'LeftArm')                      bones.leftArm  = node;
-      if (name === 'RightArm')                     bones.rightArm = node;
+      if (name === 'LeftShoulder')  bones.leftShoulder  = node;
+      if (name === 'RightShoulder') bones.rightShoulder = node;
+      if (name === 'LeftArm')       bones.leftArm       = node;
+      if (name === 'RightArm')      bones.rightArm      = node;
+      if (name === 'LeftForeArm')   bones.leftForeArm   = node;
+      if (name === 'RightForeArm')  bones.rightForeArm  = node;
+      if (name === 'LeftHand')      bones.leftHand      = node;
+      if (name === 'RightHand')     bones.rightHand     = node;
     });
 
     avatarGroup.add(model);
+    storeRestRotations();
     avatarReady = true;
 
-    // Fade in each material
+    // Fade in
     mats.forEach((mat) => {
       gsap.to(mat, { opacity: 1, duration: 1.4, ease: 'power2.out' });
+    });
+
+    // ─── Greeting wave (plays once after fade-in) ──────────
+    gsap.delayedCall(1.6, () => {
+      if (!avatarReady) return;
+
+      const rArm  = ensureTarget('rightArm');
+      const rFore = ensureTarget('rightForeArm');
+      const rHand = ensureTarget('rightHand');
+
+      const wave = gsap.timeline({
+        onComplete: () => {
+          greetingDone = true;
+          poseWeight = 0;
+        },
+      });
+
+      // Lift right arm + ramp poseWeight
+      wave.to(rArm,  { z: -0.8, duration: 0.5, ease: 'power2.out' }, 0);
+      wave.to(rFore, { z: -1.2, duration: 0.5, ease: 'power2.out' }, 0);
+      wave.to({ pw: 0 }, {
+        pw: 1, duration: 0.4, ease: 'power2.out',
+        onUpdate() { poseWeight = (this as any).targets()[0].pw; },
+      }, 0);
+
+      // Rock hand 3 times
+      for (let i = 0; i < 3; i++) {
+        wave.to(rHand, { z:  0.3, duration: 0.18, ease: 'sine.inOut' });
+        wave.to(rHand, { z: -0.3, duration: 0.18, ease: 'sine.inOut' });
+      }
+      wave.to(rHand, { z: 0, duration: 0.15 });
+
+      // Lower arm back
+      wave.to(rArm,  { z: 0, duration: 0.6, ease: 'power2.in' });
+      wave.to(rFore, { z: 0, duration: 0.6, ease: 'power2.in' }, '<');
+      wave.to({ pw: poseWeight }, {
+        pw: 0, duration: 0.6, ease: 'power2.in',
+        onUpdate() { poseWeight = (this as any).targets()[0].pw; },
+      }, '<');
     });
   },
   undefined,
@@ -356,8 +536,24 @@ window.addEventListener('resize', () => {
   avatarGroup.position.x = window.innerWidth > 1000 ? 2.4 : 0;
 });
 
-// ─── Render loop ──────────────────────────────────────────────
+// ─── Render loop (blended idle + pose) ───────────────────────
 const clock = new THREE.Clock();
+
+function applyBone(
+  bone: THREE.Object3D | null,
+  name: string,
+  idleOffX: number, idleOffY: number, idleOffZ: number,
+) {
+  if (!bone) return;
+  const rest = restRotations[name] ?? { x: 0, y: 0, z: 0 };
+  const pt = poseTargets[name];
+  const pw = poseWeight;
+  const iw = 1 - pw;
+  // rest + idle offset when idle (pw=0), rest + pose offset when posing (pw=1)
+  bone.rotation.x = rest.x + idleOffX * iw + (pt?.x ?? 0) * pw;
+  bone.rotation.y = rest.y + idleOffY * iw + (pt?.y ?? 0) * pw;
+  bone.rotation.z = rest.z + idleOffZ * iw + (pt?.z ?? 0) * pw;
+}
 
 function animate() {
   requestAnimationFrame(animate);
@@ -386,32 +582,54 @@ function animate() {
       e.base * (0.25 + pulse * 0.75) * letterOpacityScale;
   });
 
-  // Avatar animations
+  // Avatar animations (blended idle + pose)
   if (avatarReady) {
-    // Gentle float
+    // Gentle float (group position, no conflict with bones)
     avatarGroup.position.y = BASE_Y + Math.sin(t * 0.65) * 0.045;
 
-    // Breathing (spine sway)
-    if (bones.spine) {
-      bones.spine.rotation.x = Math.sin(t * 0.85) * 0.018;
-      bones.spine.rotation.z = Math.sin(t * 0.42) * 0.008;
-    }
+    // Breathing idle values
+    const breathX = Math.sin(t * 0.85) * 0.018;
+    const breathZ = Math.sin(t * 0.42) * 0.008;
 
-    // Head tracks mouse
+    // Spine: blend breathing with pose
+    applyBone(bones.spine, 'spine', breathX, 0, breathZ);
+
+    // Head: mouse tracking blended with pose
     if (bones.head) {
-      bones.head.rotation.x += (-my * 0.20 - bones.head.rotation.x) * 0.06;
-      bones.head.rotation.y += ( mx * 0.26 - bones.head.rotation.y) * 0.06;
+      const rest = restRotations.head ?? { x: 0, y: 0, z: 0 };
+      const mouseScale = 1 - poseWeight * 0.7;   // 30% mouse influence during poses
+      const headPose = poseTargets.head;
+      const targetX = rest.x + (-my * 0.20) * mouseScale + (headPose?.x ?? 0) * poseWeight;
+      const targetY = rest.y + ( mx * 0.26) * mouseScale + (headPose?.y ?? 0) * poseWeight;
+      bones.head.rotation.x += (targetX - bones.head.rotation.x) * 0.06;
+      bones.head.rotation.y += (targetY - bones.head.rotation.y) * 0.06;
     }
 
-    // Neck slight assist
+    // Neck: mouse assist blended
     if (bones.neck) {
-      bones.neck.rotation.x += (-my * 0.07 - bones.neck.rotation.x) * 0.06;
-      bones.neck.rotation.y += ( mx * 0.07 - bones.neck.rotation.y) * 0.06;
+      const rest = restRotations.neck ?? { x: 0, y: 0, z: 0 };
+      const mouseScale = 1 - poseWeight * 0.7;
+      const neckPose = poseTargets.neck;
+      const targetX = rest.x + (-my * 0.07) * mouseScale + (neckPose?.x ?? 0) * poseWeight;
+      const targetY = rest.y + ( mx * 0.07) * mouseScale + (neckPose?.y ?? 0) * poseWeight;
+      bones.neck.rotation.x += (targetX - bones.neck.rotation.x) * 0.06;
+      bones.neck.rotation.y += (targetY - bones.neck.rotation.y) * 0.06;
     }
 
-    // Arms idle sway
-    if (bones.leftArm)  bones.leftArm.rotation.z  =  Math.sin(t * 0.52 + 0.5) * 0.035;
-    if (bones.rightArm) bones.rightArm.rotation.z = -Math.sin(t * 0.52)        * 0.035;
+    // Arms: idle sway blended with pose
+    const leftArmIdleZ  =  Math.sin(t * 0.52 + 0.5) * 0.035;
+    const rightArmIdleZ = -Math.sin(t * 0.52)        * 0.035;
+    applyBone(bones.leftArm,  'leftArm',  0, 0, leftArmIdleZ);
+    applyBone(bones.rightArm, 'rightArm', 0, 0, rightArmIdleZ);
+
+    // Forearms, hands, shoulders, hips: no idle, pure pose
+    applyBone(bones.leftForeArm,   'leftForeArm',   0, 0, 0);
+    applyBone(bones.rightForeArm,  'rightForeArm',  0, 0, 0);
+    applyBone(bones.leftHand,      'leftHand',      0, 0, 0);
+    applyBone(bones.rightHand,     'rightHand',     0, 0, 0);
+    applyBone(bones.leftShoulder,  'leftShoulder',  0, 0, 0);
+    applyBone(bones.rightShoulder, 'rightShoulder', 0, 0, 0);
+    applyBone(bones.hips,          'hips',          0, 0, 0);
   }
 
   renderer.render(scene, camera);
