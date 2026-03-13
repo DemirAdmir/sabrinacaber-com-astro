@@ -281,13 +281,19 @@ for (let i = 0; i < LETTER_COUNT; i++) {
 // ─── Avatar (Ready Player Me GLB) ────────────────────────────
 const AVATAR_URL = '/avatar.glb';
 const BASE_Y     = -2.1;
+const CAM_Z      = 6.5;
+const CAM_FOV    = 52;
+
+// Place avatar at 68% of the right frustum edge so it peeks regardless of aspect ratio
+function calcAvatarX(): number {
+  if (window.innerWidth <= 1000) return 0;
+  const aspect   = window.innerWidth / window.innerHeight;
+  const halfW    = Math.tan((CAM_FOV / 2) * (Math.PI / 180)) * CAM_Z * aspect;
+  return halfW * 0.68;
+}
 
 const avatarGroup = new THREE.Group();
-avatarGroup.position.set(
-  window.innerWidth > 1000 ? 3.6 : 0,
-  BASE_Y,
-  0,
-);
+avatarGroup.position.set(calcAvatarX(), BASE_Y, 0);
 scene.add(avatarGroup);
 
 let avatarReady = false;
@@ -540,7 +546,7 @@ window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
-  avatarGroup.position.x = window.innerWidth > 1000 ? 3.6 : 0;
+  avatarGroup.position.x = calcAvatarX();
 });
 
 // ─── Render loop (blended idle + pose) ───────────────────────
