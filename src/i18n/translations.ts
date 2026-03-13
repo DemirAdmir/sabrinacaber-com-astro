@@ -1,4 +1,4 @@
-export type Lang = 'en' | 'fr';
+export type Lang = 'en' | 'fr' | 'bhs';
 
 export const translations = {
   en: {
@@ -430,6 +430,222 @@ export const translations = {
       links: { about: 'À propos', services: 'Services', experience: 'Expérience', contact: 'Contact' },
       copyright: 'Tous droits réservés.',
       developedBy: 'Développé par',
+    },
+  },
+
+  bhs: {
+    meta: {
+      title: 'Sabrina Caber — Prevoditeljica & Kreatorica sadržaja',
+      description:
+        'Certificirana prevoditeljica (FR/EN) i iskusna kreatorica sadržaja. SEO sadržaj, copywriting, lektura i korektura za brendove širom svijeta.',
+    },
+    nav: {
+      about: 'O meni',
+      services: 'Usluge',
+      experience: 'Iskustvo',
+      contact: 'Kontakt',
+      cta: 'Angažujte me',
+    },
+    hero: {
+      tag1: 'Certificirana prevoditeljica FR/EN',
+      tag2: 'Kreatorica sadržaja',
+      titleLine1: 'Zdravo, ja sam Sabrina —',
+      titleLine2: 'riječi su moj zanat.',
+      subtitle:
+        'Kvalificirana prevoditeljica tečna u francuskom i engleskom jeziku, te iskusna kreatorica sadržaja. Kreiram jasan, uvjerljiv tekst koji povezuje vaš brend s pravom publikom.',
+      cta1: 'Moje usluge',
+      cta2: 'O meni',
+      scroll: 'Skrolaj',
+      marquee: [
+        'Prevođenje', 'Kreiranje sadržaja', 'SEO sadržaj',
+        'Lektura', 'Copywriting', 'Korektura', 'Francuski ↔ Engleski',
+      ],
+    },
+    about: {
+      tag: 'O meni',
+      titleLine1: 'Gdje se jezik',
+      titleLine2: 'susreće s preciznošću',
+      body1:
+        'Kvalificirana sam prevoditeljica tečna u francuskom i engleskom jeziku, te iskusna kreatorica sadržaja. Radim kao profesionalna prevoditeljica, kreatorica sadržaja, lektorica i korektorica, te copywriterica — a također sam i certificirana sudska prevoditeljica.',
+      body2:
+        'Radila sam kao copywriterica i SEO kreatorica sadržaja za kompanije kao što je DDC MLS, spajajući lingvističku stručnost s izoštrenim okom za detalje. Strastvena sam prema jeziku i uživam u kreiranju privlačnog sadržaja koji ostavlja utisak.',
+      note: 'Napominjem da je povjerljivost mojih klijenata za mene od izuzetne važnosti.',
+      stats: [
+        { num: '15+', label: 'Zadovoljnih klijenata' },
+        { num: '20+', label: 'Završenih projekata' },
+        { num: '3+', label: 'Godine iskustva' },
+      ],
+      skills: [
+        'Prevođenje', 'Kreiranje sadržaja', 'SEO', 'Copywriting',
+        'Lektura', 'Korektura', 'Francuski · Engleski',
+        'Canva', 'Adobe Illustrator', 'Istraživanje',
+      ],
+      cta: 'Radite sa mnom',
+    },
+    services: {
+      tag: 'Usluge',
+      titleLine1: 'Šta',
+      titleLine2: 'nudim',
+      subtitle: 'Fokusiran raspon jezičkih usluga\nza brendove, kompanije i pojedince.',
+      ctaQuestion: 'Imate projekat na umu?',
+      ctaBtn: 'Razgovarajmo',
+      items: [
+        {
+          number: '01',
+          title: 'Prevođenje FR ↔ EN',
+          description:
+            'Precizno, tečno prevođenje između francuskog i engleskog jezika — uz očuvanje tona, nijansi i namjere. Od dokumenata i ugovora do web stranica i marketinških materijala, svaka riječ je bitna.',
+          tags: ['FR → EN', 'EN → FR', 'Dokumenti', 'Marketing'],
+        },
+        {
+          number: '02',
+          title: 'Kreiranje sadržaja',
+          description:
+            'Privlačan, dobro istražen sadržaj koji govori vašoj publici. Blog objave, članci, web tekstovi, newsletteri — sadržaj koji informiše, povezuje i konvertuje.',
+          tags: ['Blog objave', 'Web tekstovi', 'Članci', 'Newsletteri'],
+        },
+        {
+          number: '03',
+          title: 'SEO kreiranje sadržaja',
+          description:
+            'Sadržaj optimiziran za pretraživače bez žrtvovanja čitljivosti. Pisanje zasnovano na ključnim riječima koje se dobro pozicionira i zadržava pažnju čitaoca od prvog do posljednjeg reda.',
+          tags: ['SEO strategija', 'Ključne riječi', 'On-Page SEO', 'Dugi format'],
+        },
+        {
+          number: '04',
+          title: 'Lektura i korektura',
+          description:
+            'Pažljiv, detaljan pogled na vaš tekst — gramatika, jasnoća, dosljednost i tok. Bilo da se radi o brzoj lekturi ili potpunoj strukturalnoj korekturi, vaš sadržaj će ostaviti uglađen utisak.',
+          tags: ['Lektura', 'Korektura', 'Stil i jasnoća', 'Dosljednost'],
+        },
+        {
+          number: '05',
+          title: 'Copywriting',
+          description:
+            'Ubjedljiv tekst koji pokreće ljude na akciju — od slogana i landing stranica do opisa proizvoda i email kampanja. Jezik koji prodaje, a da se tako ne osjeća.',
+          tags: ['Landing stranice', 'Reklamni tekst', 'Email kampanje', 'Glas brenda'],
+        },
+      ],
+    },
+    work: {
+      tag: 'Iskustvo i obrazovanje',
+      titleLine1: 'Moj',
+      titleLine2: 'put',
+      subtitle: 'Pozadina u prevođenju,\nkreiranju sadržaja i jezičkim uslugama.',
+      cta: 'Sarađujmo',
+      badgeExp: 'Iskustvo',
+      badgeEdu: 'Obrazovanje',
+      items: [
+        {
+          id: '01',
+          title: 'SEO kreatorica sadržaja',
+          category: 'Freelance',
+          description:
+            'Pisanje SEO-optimiziranog sadržaja za raznolike klijente u višestrukim industrijama. Istraživanje ključnih riječi, dugački članci i strategije sadržaja koje se rangiraju i angažuju.',
+          year: '2021 – Danas',
+          color: '#6b3fa8',
+          type: 'experience',
+        },
+        {
+          id: '02',
+          title: 'DDC MLS / UPS',
+          category: 'Copywriterica i prevoditeljica',
+          description:
+            'Copywriting i prevoditeljski rad za DDC Multilingual Solutions, podrška UPS operacijama u Francuskoj i Luksemburgu. Prevođenje dokumenata, marketinških materijala i internih komunikacija.',
+          year: '2019 – 2021',
+          color: '#4a2d8c',
+          type: 'experience',
+        },
+        {
+          id: '03',
+          title: 'Certificirana sudska prevoditeljica',
+          category: 'Francuski ↔ Engleski',
+          description:
+            'Certificirana sudska prevoditeljica koja pruža precizne i nepristrasne usluge prevođenja u pravnim postupcima. Održavanje najviših standarda povjerljivosti i profesionalne etike.',
+          year: '2018 – 2019',
+          color: '#9b4dff',
+          type: 'experience',
+        },
+        {
+          id: '04',
+          title: 'Energoinvest',
+          category: 'Prevoditeljica i tumač',
+          description:
+            'Usluge prevođenja i tumačenja za Energoinvest, rad u Alžiru i Sarajevu. Olakšavanje komunikacije između frankofonih i lokalnih timova na infrastrukturnim i inženjerskim projektima.',
+          year: '2015 – 2018',
+          color: '#3a6b4a',
+          type: 'experience',
+        },
+        {
+          id: '05',
+          title: 'MA Francuski jezik i književnost',
+          category: 'Univerzitet u Sarajevu',
+          description:
+            'Magistarski studij francuskog jezika i književnosti, izgradnja duboke stručnosti u lingvistici, književnoj analizi i teoriji prevođenja.',
+          year: '2013 – 2015',
+          color: '#1d4a6b',
+          type: 'education',
+        },
+        {
+          id: '06',
+          title: 'SEO i digitalni marketing certifikati',
+          category: 'Google · SEO Bootcamp',
+          description:
+            'Google Digital Marketing certifikat i SEO Bootcamp certifikacija — spajanje tehničkog SEO znanja sa strategijom digitalnog marketinga za isporuku sadržaja koji ostvaruje rezultate.',
+          year: '2020 – 2021',
+          color: '#8c4a2d',
+          type: 'education',
+        },
+      ],
+    },
+    contact: {
+      tag: 'Kontaktirajte me',
+      titleLine1: 'Spremni da započnete',
+      titleLine2: 'nešto veliko?',
+      body: 'Bilo da vam treba prevod, uglađen sadržaj ili svjež pogled na vaš tekst — rado bih čula o vašem projektu. Svaka odlična saradnja počinje razgovorom.',
+      note: 'Napominjem da je povjerljivost mojih klijenata za mene od izuzetne važnosti.',
+      labels: {
+        email: 'Email',
+        phone: 'Telefon',
+        languages: 'Jezici',
+        availability: 'Dostupnost',
+      },
+      languagesValue: 'Francuski · Engleski · Bosanski',
+      availableText: 'Dostupna za nove projekte',
+      social: [
+        { label: 'LinkedIn', url: 'https://linkedin.com/in/sabrinacaber' },
+      ],
+      calendly: {
+        url: 'https://calendly.com/sabrinacaber',
+        label: 'Zakažite upoznavajući poziv',
+        note: 'Besplatan 30-minutni uvodni poziv',
+      },
+      form: {
+        nameLabel: 'Vaše ime',
+        namePlaceholder: 'Amina Hodžić',
+        emailLabel: 'Email adresa',
+        emailPlaceholder: 'amina@firma.ba',
+        serviceLabel: 'Potrebna usluga',
+        servicePlaceholder: 'Odaberite uslugu…',
+        serviceOptions: [
+          { value: 'translation', label: 'Prevođenje (FR ↔ EN)' },
+          { value: 'content', label: 'Kreiranje sadržaja' },
+          { value: 'seo', label: 'SEO kreiranje sadržaja' },
+          { value: 'proofreading', label: 'Lektura i korektura' },
+          { value: 'copywriting', label: 'Copywriting' },
+          { value: 'other', label: 'Ostalo' },
+        ],
+        messageLabel: 'Recite mi o svom projektu',
+        messagePlaceholder: 'Radim na…',
+        submitBtn: 'Pošaljite poruku',
+        successMsg: 'Poruka poslana ✓',
+      },
+    },
+    footer: {
+      tagline: 'Prevoditeljica · Kreatorica sadržaja · Copywriterica',
+      links: { about: 'O meni', services: 'Usluge', experience: 'Iskustvo', contact: 'Kontakt' },
+      copyright: 'Sva prava zadržana.',
+      developedBy: 'Razvio',
     },
   },
 } as const;

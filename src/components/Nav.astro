@@ -3,15 +3,18 @@ import { translations, type Lang } from '../i18n/translations';
 interface Props { lang?: Lang; }
 const { lang = 'en' } = Astro.props;
 const t = translations[lang].nav;
-const altLang = lang === 'en' ? 'fr' : 'en';
-const altUrl = lang === 'en' ? '/fr/' : '/';
-const altLabel = lang === 'en' ? 'FR' : 'EN';
-const curLabel = lang === 'en' ? 'EN' : 'FR';
+
+const langConfig: Record<Lang, { url: string; label: string }> = {
+  en: { url: '/', label: 'EN' },
+  fr: { url: '/fr/', label: 'FR' },
+  bhs: { url: '/bhs/', label: 'BHS' },
+};
+const otherLangs = (Object.keys(langConfig) as Lang[]).filter((l) => l !== lang);
 ---
 
 <header id="nav" class="nav">
   <div class="nav__inner container">
-    <a href={lang === 'en' ? '/' : '/fr/'} class="nav__logo">
+    <a href={langConfig[lang].url} class="nav__logo">
       <span class="nav__logo-name">Sabrina</span>
       <span class="nav__logo-surname">Caber</span>
     </a>
@@ -25,9 +28,10 @@ const curLabel = lang === 'en' ? 'EN' : 'FR';
 
     <div class="nav__right">
       <div class="nav__lang" aria-label="Language switcher">
-        <span class="nav__lang-current">{curLabel}</span>
-        <span class="nav__lang-sep">/</span>
-        <a href={altUrl} class="nav__lang-link" lang={altLang}>{altLabel}</a>
+        <span class="nav__lang-current">{langConfig[lang].label}</span>
+        {otherLangs.map((l, i) => (
+          <><span class="nav__lang-sep">/</span><a href={langConfig[l].url} class="nav__lang-link" lang={l}>{langConfig[l].label}</a></>
+        ))}
       </div>
       <a href="#contact" class="btn btn-outline nav__cta">
         <span>{t.cta}</span>
@@ -50,9 +54,10 @@ const curLabel = lang === 'en' ? 'EN' : 'FR';
       <a href="#contact" class="nav__mobile-link">{t.contact}</a>
     </nav>
     <div class="nav__mobile-lang">
-      <span class="nav__lang-current">{curLabel}</span>
-      <span class="nav__lang-sep">/</span>
-      <a href={altUrl} class="nav__lang-link" lang={altLang}>{altLabel}</a>
+      <span class="nav__lang-current">{langConfig[lang].label}</span>
+      {otherLangs.map((l) => (
+        <><span class="nav__lang-sep">/</span><a href={langConfig[l].url} class="nav__lang-link" lang={l}>{langConfig[l].label}</a></>
+      ))}
     </div>
   </div>
 </header>

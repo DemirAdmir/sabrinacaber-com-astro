@@ -13,7 +13,13 @@ const { lang = 'en', title, description } = Astro.props;
 const t = translations[lang];
 const pageTitle = title ?? t.meta.title;
 const pageDesc = description ?? t.meta.description;
-const altUrl = lang === 'en' ? '/fr/' : '/';
+
+const langConfig: Record<Lang, { url: string; href: string; label: string; flag: string }> = {
+  en: { url: '/', href: 'https://www.sabrinacaber.com/', label: 'English version', flag: '\uD83C\uDDEC\uD83C\uDDE7' },
+  fr: { url: '/fr/', href: 'https://www.sabrinacaber.com/fr/', label: 'Version fran\u00e7aise', flag: '\uD83C\uDDEB\uD83C\uDDF7' },
+  bhs: { url: '/bhs/', href: 'https://www.sabrinacaber.com/bhs/', label: 'BHS verzija', flag: '\uD83C\uDDE7\uD83C\uDDE6' },
+};
+const otherLangs = (Object.keys(langConfig) as Lang[]).filter((l) => l !== lang);
 ---
 
 <!doctype html>
@@ -29,6 +35,9 @@ const altUrl = lang === 'en' ? '/fr/' : '/';
   <meta property="og:url" content="https://www.sabrinacaber.com" />
   <link rel="alternate" hreflang="en" href="https://www.sabrinacaber.com/" />
   <link rel="alternate" hreflang="fr" href="https://www.sabrinacaber.com/fr/" />
+  <link rel="alternate" hreflang="bs" href="https://www.sabrinacaber.com/bhs/" />
+  <link rel="alternate" hreflang="hr" href="https://www.sabrinacaber.com/bhs/" />
+  <link rel="alternate" hreflang="sr" href="https://www.sabrinacaber.com/bhs/" />
   <link rel="alternate" hreflang="x-default" href="https://www.sabrinacaber.com/" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <title>{pageTitle}</title>
@@ -42,7 +51,7 @@ const altUrl = lang === 'en' ? '/fr/' : '/';
     <div class="container">
       <div class="footer__inner">
         <div class="footer__brand">
-          <a href={lang === 'en' ? '/' : '/fr/'} class="footer__logo">Sabrina Caber</a>
+          <a href={langConfig[lang].url} class="footer__logo">Sabrina Caber</a>
           <p class="footer__tagline">{t.footer.tagline}</p>
         </div>
         <div class="footer__links">
@@ -55,9 +64,11 @@ const altUrl = lang === 'en' ? '/fr/' : '/';
           <a href="mailto:sabrinacaber@gmail.com" class="footer__contact-link">sabrinacaber@gmail.com</a>
           <a href="tel:+38761997090" class="footer__contact-link">+387 61-997-090</a>
           <a href="https://linkedin.com/in/sabrinacaber" target="_blank" rel="noopener noreferrer" class="footer__contact-link">LinkedIn</a>
-          <a href={altUrl} class="footer__contact-link footer__lang-switch">
-            {lang === 'en' ? '🇫🇷 Version française' : '🇬🇧 English version'}
-          </a>
+          {otherLangs.map((l) => (
+            <a href={langConfig[l].url} class="footer__contact-link footer__lang-switch" lang={l}>
+              {langConfig[l].flag} {langConfig[l].label}
+            </a>
+          ))}
         </div>
       </div>
       <div class="footer__bottom">

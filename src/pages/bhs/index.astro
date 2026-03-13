@@ -1,0 +1,98 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Hero from '../../components/Hero.astro';
+import About from '../../components/About.astro';
+import Services from '../../components/Services.astro';
+import Work from '../../components/Work.astro';
+import Contact from '../../components/Contact.astro';
+
+const lang = 'bhs' as const;
+---
+
+<Layout lang={lang}>
+  <Hero lang={lang} />
+  <About lang={lang} />
+  <Services lang={lang} />
+  <Work lang={lang} />
+  <Contact lang={lang} />
+</Layout>
+
+<script>
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
+
+function revealOnScroll(selector: string, vars?: gsap.TweenVars) {
+  gsap.utils.toArray<HTMLElement>(selector).forEach((el) => {
+    gsap.fromTo(el, { opacity: 0, y: 40 }, {
+      opacity: 1, y: 0, duration: 0.9, ease: 'power3.out', ...vars,
+      scrollTrigger: { trigger: el, start: 'top 88%', once: true },
+    });
+  });
+}
+
+revealOnScroll('.about__image-wrapper');
+revealOnScroll('.about__stat', { stagger: 0.12 });
+revealOnScroll('.about__overline');
+revealOnScroll('.about__title', { duration: 1 });
+revealOnScroll('.about__body');
+revealOnScroll('.about__skills');
+revealOnScroll('.about__cta', { y: 20 });
+
+revealOnScroll('.services__header');
+gsap.utils.toArray<HTMLElement>('.service-card').forEach((el, i) => {
+  gsap.fromTo(el, { opacity: 0, y: 50 }, {
+    opacity: 1, y: 0, duration: 0.8, ease: 'power3.out',
+    delay: (i % 3) * 0.1,
+    scrollTrigger: { trigger: el, start: 'top 88%', once: true },
+  });
+});
+revealOnScroll('.services__cta-row', { y: 20 });
+
+gsap.utils.toArray<HTMLElement>('.work-item').forEach((el, i) => {
+  gsap.fromTo(el, { opacity: 0, x: -30 }, {
+    opacity: 1, x: 0, duration: 0.7, ease: 'power3.out',
+    scrollTrigger: { trigger: el, start: 'top 90%', once: true },
+    delay: i * 0.06,
+  });
+});
+revealOnScroll('.work__header');
+revealOnScroll('.work__footer', { y: 20 });
+
+revealOnScroll('.contact__info > *', { stagger: 0.1 });
+revealOnScroll('.contact__form-wrapper', { x: 30, y: 0 });
+
+gsap.utils.toArray<HTMLElement>('.about__bg-orb, .services__bg, .contact__bg').forEach((el) => {
+  gsap.to(el, {
+    y: -80, ease: 'none',
+    scrollTrigger: {
+      trigger: el.parentElement!,
+      start: 'top bottom', end: 'bottom top', scrub: 1,
+    },
+  });
+});
+
+function animateCounter(el: HTMLElement) {
+  const target = parseInt(el.textContent?.replace(/\D/g, '') || '0', 10);
+  const suffix = el.textContent?.replace(/[0-9]/g, '') || '';
+  gsap.fromTo({ val: 0 }, { val: target }, {
+    duration: 1.5, ease: 'power2.out',
+    onUpdate() { el.textContent = Math.round((this as any).targets()[0].val) + suffix; },
+    scrollTrigger: { trigger: el, start: 'top 85%', once: true },
+  });
+}
+
+document.querySelectorAll<HTMLElement>('.about__stat-num').forEach(animateCounter);
+
+// ─── Section detection → avatar reactions ─────────────────────
+['home', 'about', 'services', 'work', 'contact'].forEach((id) => {
+  ScrollTrigger.create({
+    trigger: `#${id}`,
+    start: 'top 50%',
+    end: 'bottom 50%',
+    onEnter:     () => window.dispatchEvent(new CustomEvent('section-active', { detail: id })),
+    onEnterBack: () => window.dispatchEvent(new CustomEvent('section-active', { detail: id })),
+  });
+});
+</script>
