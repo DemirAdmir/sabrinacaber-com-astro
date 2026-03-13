@@ -62,7 +62,7 @@ const t = translations[lang].hero;
 }
 
 @media (max-width: 900px) {
-  #hero-canvas { opacity: 0.55; }
+  #hero-canvas { opacity: 0.35; }
 }
 
 .hero__content {
@@ -174,18 +174,18 @@ const t = translations[lang].hero;
 }
 
 @media (max-width: 768px) {
-  .hero__title { font-size: clamp(2.2rem, 8vw, 3.5rem); }
+  .hero__title { font-size: clamp(1.9rem, 7vw, 2.8rem); }
 }
 
 @media (max-width: 600px) {
   .hero__scroll-indicator { display: none; }
-  .hero__content { padding-bottom: 6rem; }
-  .hero__subtitle { font-size: 0.92rem; }
-  .hero__actions { gap: 0.75rem; }
-  .hero__actions .btn { padding: 0.8rem 1.5rem; font-size: 0.72rem; }
+  .hero__content { padding-bottom: 5rem; }
+  .hero__subtitle { font-size: 0.9rem; }
+  .hero__actions { gap: 0.75rem; flex-direction: column; }
+  .hero__actions .btn { width: 100%; justify-content: center; padding: 0.9rem 1.5rem; font-size: 0.72rem; }
   .hero__eyebrow { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
-  .hero__title { font-size: clamp(2rem, 9vw, 2.8rem); }
-  .hero__title-line { word-break: break-word; }
+  .hero__title { font-size: clamp(1.8rem, 8.5vw, 2.4rem); }
+  .hero__title-line { word-break: break-word; overflow-wrap: break-word; }
 }
 </style>
 
@@ -294,6 +294,7 @@ function calcAvatarX(): number {
 
 const avatarGroup = new THREE.Group();
 avatarGroup.position.set(calcAvatarX(), BASE_Y, 0);
+avatarGroup.visible = window.innerWidth > 900;
 scene.add(avatarGroup);
 
 let avatarReady = false;
@@ -547,6 +548,7 @@ window.addEventListener('resize', () => {
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
   avatarGroup.position.x = calcAvatarX();
+  avatarGroup.visible = window.innerWidth > 900;
 });
 
 // ─── Render loop (blended idle + pose) ───────────────────────
