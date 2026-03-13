@@ -1,28 +1,28 @@
 /* ============================================
    SABRINA CABER — Global Styles
-   Navy / Cobalt Professional Palette
+   Deep Indigo-Violet Professional Palette
    ============================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap');
 
 :root {
-  /* Navy / Cobalt Palette */
-  --clr-bg:           #07101c;
-  --clr-bg-2:         #0a1422;
-  --clr-surface:      #0d1a2e;
-  --clr-surface-2:    #112135;
-  --clr-border:       #192c47;
-  --clr-purple-deep:  #0c1e42;
-  --clr-purple:       #163266;
-  --clr-purple-mid:   #235096;
-  --clr-purple-light: #3d72cc;
-  --clr-purple-pale:  #85b4f8;
-  --clr-accent:       #3d7fff;
-  --clr-accent-glow:  #2d6eee;
-  --clr-gold:         #85b4f8;
-  --clr-text:         #dde6f5;
-  --clr-text-muted:   #7988a3;
-  --clr-text-dim:     #36495e;
+  /* Deep Indigo-Violet Palette */
+  --clr-bg:           #0b0a1e;
+  --clr-bg-2:         #0f0d26;
+  --clr-surface:      #13112e;
+  --clr-surface-2:    #181535;
+  --clr-border:       #24205a;
+  --clr-purple-deep:  #1c1850;
+  --clr-purple:       #2e298a;
+  --clr-purple-mid:   #4c45b8;
+  --clr-purple-light: #6d65d4;
+  --clr-purple-pale:  #b0aae8;
+  --clr-accent:       #7c5ce8;
+  --clr-accent-glow:  #6b4ed6;
+  --clr-gold:         #b0aae8;
+  --clr-text:         #e8e4f8;
+  --clr-text-muted:   #8a85a8;
+  --clr-text-dim:     #3c3866;
   --clr-white:        #ffffff;
 
   /* Typography */
@@ -98,7 +98,7 @@ img { max-width: 100%; display: block; }
 /* Section spacing */
 section { padding: var(--section-pad) 0; position: relative; }
 
-/* Gradient text — professional blue */
+/* Gradient text — violet to periwinkle */
 .gradient-text {
   background: linear-gradient(135deg, var(--clr-purple-pale) 0%, var(--clr-accent) 100%);
   -webkit-background-clip: text;
@@ -106,7 +106,7 @@ section { padding: var(--section-pad) 0; position: relative; }
   background-clip: text;
 }
 
-/* Subtle highlight (replaces glow) */
+/* Subtle highlight */
 .glow { color: var(--clr-purple-pale); }
 
 /* Divider line */
@@ -138,14 +138,14 @@ section { padding: var(--section-pad) 0; position: relative; }
 .btn-primary {
   background: var(--clr-accent);
   color: var(--clr-white);
-  box-shadow: 0 2px 20px rgba(61, 127, 255, 0.22);
+  box-shadow: 0 2px 24px rgba(124, 92, 232, 0.28);
 }
 
 .btn-primary::before { display: none; }
 
 .btn-primary:hover {
   background: var(--clr-accent-glow);
-  box-shadow: 0 4px 28px rgba(61, 127, 255, 0.35);
+  box-shadow: 0 4px 32px rgba(124, 92, 232, 0.42);
   transform: translateY(-2px);
 }
 
@@ -158,7 +158,7 @@ section { padding: var(--section-pad) 0; position: relative; }
 .btn-outline:hover {
   border-color: var(--clr-accent);
   color: var(--clr-accent);
-  background: rgba(61, 127, 255, 0.06);
+  background: rgba(124, 92, 232, 0.07);
   transform: translateY(-2px);
 }
 

@@ -211,7 +211,7 @@ globeGroup.rotation.z = 0.38; // axial tilt, like Earth
 scene.add(globeGroup);
 
 const R = 2.1; // globe radius
-const BG_COLOR = 0x07101c; // matches --clr-bg
+const BG_COLOR = 0x0b0a1e; // matches --clr-bg
 
 function updateGlobeLayout() {
   if (window.innerWidth > 900) {
@@ -234,19 +234,19 @@ globeGroup.add(occluder);
 // ─── Wireframe grid ──────────────────────────────────────────
 const wireGeo = new THREE.SphereGeometry(R, 42, 28);
 const wireMat = new THREE.MeshBasicMaterial({
-  color: 0x1e3d72,
+  color: 0x2e298a,
   wireframe: true,
   transparent: true,
-  opacity: 0.10,
+  opacity: 0.11,
 });
 globeGroup.add(new THREE.Mesh(wireGeo, wireMat));
 
 // ─── Atmospheric halo ─────────────────────────────────────────
 const haloGeo = new THREE.SphereGeometry(R * 1.14, 32, 24);
 const haloMat = new THREE.MeshBasicMaterial({
-  color: 0x1a4a8c,
+  color: 0x4c45b8,
   transparent: true,
-  opacity: 0.04,
+  opacity: 0.05,
   side: THREE.BackSide,
   depthWrite: false,
 });
@@ -272,7 +272,7 @@ for (let i = 0; i < NODE_COUNT; i++) {
 const nodeGeo = new THREE.BufferGeometry();
 nodeGeo.setAttribute('position', new THREE.BufferAttribute(nodePosArr, 3));
 const nodeMat = new THREE.PointsMaterial({
-  color: 0x4f8ef7,
+  color: 0x7c5ce8,
   size: 0.04,
   transparent: true,
   opacity: 0.85,
@@ -312,16 +312,16 @@ for (let i = 0; i < ARC_COUNT; i++) {
   // Arc line
   const lineGeo = new THREE.BufferGeometry().setFromPoints(pts);
   const lineMat = new THREE.LineBasicMaterial({
-    color: 0x2a5aab,
+    color: 0x4c45b8,
     transparent: true,
-    opacity: 0.14 + Math.random() * 0.14,
+    opacity: 0.15 + Math.random() * 0.15,
   });
   globeGroup.add(new THREE.Line(lineGeo, lineMat));
 
   // Traveling dot
   const dotGeo = new THREE.SphereGeometry(0.026, 7, 7);
   const dotMat = new THREE.MeshBasicMaterial({
-    color: 0xaad0ff,
+    color: 0xc4bdf5,
     transparent: true,
     opacity: 0,
   });
