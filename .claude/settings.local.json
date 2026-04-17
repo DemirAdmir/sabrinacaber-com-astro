@@ -25,7 +25,14 @@
       "Bash(~/.nvm/versions/node/v18.18.0/bin/npx netlify:*)",
       "Bash(netlify status:*)",
       "Bash(netlify deploy:*)",
-      "WebFetch(domain:www.sabrinacaber.com)"
+      "WebFetch(domain:www.sabrinacaber.com)",
+      "WebFetch(domain:medium.com)",
+      "WebSearch",
+      "Bash(curl -L \"https://models.readyplayer.me/69b4024e5f0ce8d116182c44.glb\" -o /Users/admirdemir/Projects/sabrinacaber-com-astro/public/avatar.glb --progress-bar)",
+      "Bash(grep -r \"IntersectionObserver\\\\|observer\\\\|scroll.*active\\\\|active.*section\" /Users/admirdemir/Projects/sabrinacaber-com-astro/src --include=*.astro --include=*.ts --include=*.js)",
+      "Bash(npm run:*)",
+      "Bash(gh api:*)",
+      "Bash(npx netlify-cli:*)"
     ]
   }
 }

@@ -1,33 +1,30 @@
 /* ============================================
    SABRINA CABER — Global Styles
-   Deep Indigo-Violet Professional Palette
+   Carbon & Amber Design Language
    ============================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap');
 
 :root {
-  /* Deep Indigo-Violet Palette */
-  --clr-bg:           #0b0a1e;
-  --clr-bg-2:         #0f0d26;
-  --clr-surface:      #13112e;
-  --clr-surface-2:    #181535;
-  --clr-border:       #24205a;
-  --clr-purple-deep:  #1c1850;
-  --clr-purple:       #2e298a;
-  --clr-purple-mid:   #4c45b8;
-  --clr-purple-light: #6d65d4;
-  --clr-purple-pale:  #b0aae8;
-  --clr-accent:       #7c5ce8;
-  --clr-accent-glow:  #6b4ed6;
-  --clr-gold:         #b0aae8;
-  --clr-text:         #e8e4f8;
-  --clr-text-muted:   #8a85a8;
-  --clr-text-dim:     #3c3866;
+  /* Carbon & Amber Palette */
+  --clr-bg:           #08080c;
+  --clr-bg-2:         #0d0d12;
+  --clr-surface:      #131318;
+  --clr-surface-2:    #1a1a20;
+  --clr-border:       rgba(255,255,255,0.07);
+  --clr-border-strong: rgba(255,255,255,0.13);
+  --clr-accent:       #c8a96e;
+  --clr-accent-2:     #e4c97a;
+  --clr-accent-glow:  rgba(200,169,110,0.22);
+  --clr-emerald:      #3ecf8e;
+  --clr-text:         #ede9e0;
+  --clr-text-muted:   #8a8680;
+  --clr-text-dim:     #3c3a36;
   --clr-white:        #ffffff;
 
   /* Typography */
   --font-display:  'DM Serif Display', serif;
-  --font-body:     'Inter', sans-serif;
+  --font-body:     'Plus Jakarta Sans', sans-serif;
 
   /* Spacing */
   --section-pad: clamp(80px, 10vw, 140px);
@@ -63,11 +60,11 @@ body {
 /* Custom scrollbar */
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: var(--clr-bg); }
-::-webkit-scrollbar-thumb { background: var(--clr-purple-mid); border-radius: 99px; }
-::-webkit-scrollbar-thumb:hover { background: var(--clr-accent); }
+::-webkit-scrollbar-thumb { background: var(--clr-accent); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--clr-accent-2); }
 
 /* Selection */
-::selection { background: var(--clr-purple-mid); color: var(--clr-white); }
+::selection { background: var(--clr-accent); color: #08080c; }
 
 /* Container */
 .container {
@@ -85,8 +82,8 @@ h1, h2, h3, h4 {
   font-weight: 400;
 }
 
-h1 { font-size: clamp(2.4rem, 7vw, 6rem); }
-h2 { font-size: clamp(2rem, 4.5vw, 3.8rem); }
+h1 { font-size: clamp(2.8rem, 6vw, 6.5rem); }
+h2 { font-size: clamp(2.2rem, 4.5vw, 4rem); }
 h3 { font-size: clamp(1.1rem, 2vw, 1.75rem); }
 
 p { font-size: clamp(0.9rem, 1.2vw, 1rem); color: var(--clr-text-muted); }
@@ -100,7 +97,7 @@ section {
   padding: var(--section-pad) 0;
   position: relative;
   z-index: 1;
-  background: linear-gradient(to right, var(--clr-bg) 78%, rgba(11, 10, 30, 0.6) 88%, transparent 100%);
+  background: linear-gradient(to right, var(--clr-bg) 75%, rgba(8,8,12,0.5) 87%, transparent 100%);
 }
 section.hero { background: transparent; }
 
@@ -109,16 +106,16 @@ section.hero { background: transparent; }
   section.hero { background: transparent; }
 }
 
-/* Gradient text — violet to periwinkle */
+/* Gradient text — amber to gold */
 .gradient-text {
-  background: linear-gradient(135deg, var(--clr-purple-pale) 0%, var(--clr-accent) 100%);
+  background: linear-gradient(135deg, var(--clr-accent-2) 0%, var(--clr-accent) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 /* Subtle highlight */
-.glow { color: var(--clr-purple-pale); }
+.glow { color: var(--clr-accent-2); }
 
 /* Divider line */
 .divider {
@@ -148,28 +145,28 @@ section.hero { background: transparent; }
 
 .btn-primary {
   background: var(--clr-accent);
-  color: var(--clr-white);
-  box-shadow: 0 2px 24px rgba(124, 92, 232, 0.28);
+  color: #08080c;
+  box-shadow: 0 2px 24px rgba(200,169,110,0.28);
 }
 
 .btn-primary::before { display: none; }
 
 .btn-primary:hover {
-  background: var(--clr-accent-glow);
-  box-shadow: 0 4px 32px rgba(124, 92, 232, 0.42);
+  background: var(--clr-accent-2);
+  box-shadow: 0 4px 32px rgba(200,169,110,0.42);
   transform: translateY(-2px);
 }
 
 .btn-outline {
   background: transparent;
-  color: var(--clr-purple-pale);
-  border: 1px solid var(--clr-border);
+  color: var(--clr-text-muted);
+  border: 1px solid var(--clr-border-strong);
 }
 
 .btn-outline:hover {
   border-color: var(--clr-accent);
   color: var(--clr-accent);
-  background: rgba(124, 92, 232, 0.07);
+  background: rgba(200,169,110,0.06);
   transform: translateY(-2px);
 }
 
