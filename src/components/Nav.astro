@@ -72,11 +72,12 @@ const otherLangs = (Object.keys(langConfig) as Lang[]).filter((l) => l !== lang)
 }
 
 .nav.scrolled {
-  padding: 1rem 0;
-  background: rgba(8,8,12,0.92);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  padding: 0.9rem 0;
+  background: rgba(8,8,12,0.88);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
   border-bottom: 1px solid var(--clr-border);
+  box-shadow: 0 1px 40px rgba(0,0,0,0.4);
 }
 
 .nav__inner {
@@ -108,9 +109,9 @@ const otherLangs = (Object.keys(langConfig) as Lang[]).filter((l) => l !== lang)
 .nav__links { display: flex; align-items: center; gap: 2.5rem; }
 
 .nav__link {
-  font-size: 0.8rem;
-  font-weight: 400;
-  letter-spacing: 0.1em;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--clr-text-muted);
   position: relative;
@@ -120,13 +121,14 @@ const otherLangs = (Object.keys(langConfig) as Lang[]).filter((l) => l !== lang)
 .nav__link::after {
   content: '';
   position: absolute;
-  bottom: -4px; left: 0;
+  bottom: -5px; left: 50%;
+  transform: translateX(-50%);
   width: 0; height: 1px;
   background: var(--clr-accent);
   transition: width 0.4s var(--ease-out);
 }
 
-.nav__link:hover { color: var(--clr-accent); }
+.nav__link:hover { color: var(--clr-white); }
 .nav__link:hover::after { width: 100%; }
 
 /* Right side: lang switcher + CTA */
