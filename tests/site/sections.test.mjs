@@ -64,3 +64,21 @@ for (const lang of LANGS) {
 test('testimonials component is gone', () => {
   assert.equal(existsSync('src/components/Testimonials.astro'), false);
 });
+
+const BADGE = {
+  en: ['Experience', 'Education'],
+  fr: ['Expérience', 'Formation'],
+  bhs: ['Iskustvo', 'Obrazovanje'],
+};
+
+for (const lang of LANGS) {
+  test(`${lang}: experience timeline has six labelled entries without item colours`, () => {
+    const s = section(load(lang), 'work');
+    assert.match(s, /aria-labelledby="work-title"/);
+    assert.equal(count(s, /<li[^>]*class="entry"/g), 6);
+    assert.equal(count(s, /class="entry__year"/g), 6);
+    assert.equal(count(s, new RegExp(`class="entry__type[^"]*"[^>]*>${BADGE[lang][0]}<`, 'g')), 4);
+    assert.equal(count(s, new RegExp(`class="entry__type[^"]*"[^>]*>${BADGE[lang][1]}<`, 'g')), 2);
+    assert.ok(!/style="[^"]*#[0-9a-f]{3,6}/i.test(s), 'inline item colour found');
+  });
+}
