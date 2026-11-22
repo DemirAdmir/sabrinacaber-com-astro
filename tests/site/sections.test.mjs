@@ -41,3 +41,26 @@ for (const lang of LANGS) {
     }
   });
 }
+
+const STEP1 = { en: 'Brief', fr: 'Brief', bhs: 'Upit' };
+const NOTE = {
+  en: 'confidentiality of my clients',
+  fr: 'confidentialité de mes clients',
+  bhs: 'povjerljivost mojih klijenata',
+};
+
+for (const lang of LANGS) {
+  test(`${lang}: process section lists four steps and the confidentiality note`, () => {
+    const s = section(load(lang), 'process');
+    assert.match(s, /aria-labelledby="process-title"/);
+    const ol = s.match(/<ol[^>]*class="process__steps"[\s\S]*?<\/ol>/);
+    assert.ok(ol, 'no steps list');
+    assert.equal(count(ol[0], /<li[^>]*class="step"/g), 4);
+    assert.match(ol[0], new RegExp(`<h3[^>]*>${STEP1[lang]}<`));
+    assert.ok(s.includes(NOTE[lang]), 'missing note');
+  });
+}
+
+test('testimonials component is gone', () => {
+  assert.equal(existsSync('src/components/Testimonials.astro'), false);
+});
