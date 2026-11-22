@@ -1,302 +1,258 @@
 ---
+import SectionTitle from './SectionTitle.astro';
 import { translations, type Lang } from '../i18n/translations';
 interface Props { lang?: Lang; }
 const { lang = 'en' } = Astro.props;
 const t = translations[lang].contact;
+const f = t.form;
+const altLang = lang === 'fr' ? 'en' : 'fr';
+const messages = JSON.stringify({ errors: f.errors, sending: f.sending, success: f.successMsg, submit: f.submitBtn });
 ---
 
-<section id="contact" class="contact">
-  <div class="contact__bg" aria-hidden="true"></div>
+<section id="contact" class="section contact" aria-labelledby="contact-title">
   <div class="container">
+    <SectionTitle id="contact" eyebrow={t.tag} line1={t.titleLine1} line2={t.titleLine2} alt={t.titleAlt} altLang={altLang} />
+
     <div class="contact__grid">
-      <!-- Left info -->
-      <div class="contact__info">
-        <span class="tag">{t.tag}</span>
-        <div class="divider"></div>
-        <h2 class="contact__title">
-          {t.titleLine1}<br />
-          <em class="gradient-text">{t.titleLine2}</em>
-        </h2>
+      <div class="contact__info" data-reveal>
         <p class="contact__body">{t.body}</p>
-        <p class="contact__note">{t.note}</p>
 
-        <div class="contact__details">
-          <div class="contact__detail">
-            <span class="contact__detail-label">{t.labels.email}</span>
-            <a href="mailto:sabrinacaber@gmail.com" class="contact__detail-value">
-              sabrinacaber@gmail.com
-            </a>
+        <dl class="contact__details">
+          <div>
+            <dt class="label">{t.labels.email}</dt>
+            <dd><a class="link contact__value" href="mailto:sabrinacaber@gmail.com">sabrinacaber@gmail.com</a></dd>
           </div>
-          <div class="contact__detail">
-            <span class="contact__detail-label">{t.labels.phone}</span>
-            <a href="tel:+38761997090" class="contact__detail-value">
-              +387 61-997-090
-            </a>
+          <div>
+            <dt class="label">{t.labels.phone}</dt>
+            <dd><a class="link contact__value" href="tel:+38761997090">+387 61 997 090</a></dd>
           </div>
-          <div class="contact__detail">
-            <span class="contact__detail-label">{t.labels.languages}</span>
-            <span class="contact__detail-value">{t.languagesValue}</span>
+          <div>
+            <dt class="label">{t.labels.languages}</dt>
+            <dd class="contact__value">{t.languagesValue}</dd>
           </div>
-          <div class="contact__detail">
-            <span class="contact__detail-label">{t.labels.availability}</span>
-            <span class="contact__detail-value contact__available">
-              <span class="contact__dot"></span>
-              {t.availableText}
-            </span>
+          <div>
+            <dt class="label">{t.labels.availability}</dt>
+            <dd class="contact__value">{t.availableText}</dd>
           </div>
-        </div>
+        </dl>
 
-        <div class="contact__social">
+        <div class="contact__links">
+          <a class="btn btn--ghost" href={t.calendly.url} target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="contact__icon"><rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" /></svg>
+            {t.calendly.label}
+          </a>
           {t.social.map((s) => (
-            <a href={s.url} target="_blank" rel="noopener noreferrer" class="contact__social-link">{s.label}</a>
+            <a class="link contact__social" href={s.url} target="_blank" rel="noopener noreferrer">{s.label}</a>
           ))}
         </div>
+        <p class="contact__small">{t.calendly.note}</p>
+      </div>
 
-        <!-- Calendly booking -->
-        <div class="contact__calendly">
-          <p class="contact__calendly-note">{t.calendly.note}</p>
-          <a
-            href={t.calendly.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="btn btn-primary contact__calendly-btn"
-          >
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <rect x="2" y="3" width="12" height="11" rx="1" stroke="currentColor" stroke-width="1.5"/>
-              <path d="M2 7h12M5 1v4M11 1v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-            </svg>
-            <span>{t.calendly.label}</span>
-          </a>
+      <form
+        class="contact__form"
+        name="contact"
+        method="POST"
+        data-netlify="true"
+        netlify-honeypot="bot-field"
+        novalidate
+        data-messages={messages}
+        data-reveal
+      >
+        <input type="hidden" name="form-name" value="contact" />
+        <input type="hidden" name="lang" value={lang} />
+        <p class="contact__hp" aria-hidden="true">
+          <label>Leave empty <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
+        </p>
+
+        <div class="field">
+          <label class="field__label" for="cf-name">{f.nameLabel}</label>
+          <input class="field__input" id="cf-name" name="name" type="text" autocomplete="name" placeholder={f.namePlaceholder} required aria-describedby="cf-name-error" />
+          <p class="field__error" id="cf-name-error"></p>
         </div>
-      </div>
 
-      <!-- Right form -->
-      <div class="contact__form-wrapper">
-        <form class="contact__form" id="contact-form" novalidate>
-          <div class="form-group">
-            <label for="name" class="form-label">{t.form.nameLabel}</label>
-            <input type="text" id="name" name="name" class="form-input" placeholder={t.form.namePlaceholder} required />
-          </div>
-          <div class="form-group">
-            <label for="email" class="form-label">{t.form.emailLabel}</label>
-            <input type="email" id="email" name="email" class="form-input" placeholder={t.form.emailPlaceholder} required />
-          </div>
-          <div class="form-group">
-            <label for="project" class="form-label">{t.form.serviceLabel}</label>
-            <select id="project" name="project" class="form-input form-select">
-              <option value="">{t.form.servicePlaceholder}</option>
-              {t.form.serviceOptions.map((o) => (
-                <option value={o.value}>{o.label}</option>
-              ))}
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="message" class="form-label">{t.form.messageLabel}</label>
-            <textarea id="message" name="message" class="form-input form-textarea" placeholder={t.form.messagePlaceholder} rows="5" required></textarea>
-          </div>
-          <button type="submit" class="btn btn-primary contact__submit" data-success={t.form.successMsg}>
-            <span>{t.form.submitBtn}</span>
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path d="M3 8h10M8 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </button>
-        </form>
-      </div>
+        <div class="field">
+          <label class="field__label" for="cf-email">{f.emailLabel}</label>
+          <input class="field__input" id="cf-email" name="email" type="email" autocomplete="email" inputmode="email" placeholder={f.emailPlaceholder} required aria-describedby="cf-email-error" />
+          <p class="field__error" id="cf-email-error"></p>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="cf-service">{f.serviceLabel}</label>
+          <select class="field__input field__select" id="cf-service" name="service">
+            <option value="">{f.servicePlaceholder}</option>
+            {f.serviceOptions.map((o) => <option value={o.value}>{o.label}</option>)}
+          </select>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="cf-message">{f.messageLabel}</label>
+          <textarea class="field__input field__textarea" id="cf-message" name="message" rows="5" placeholder={f.messagePlaceholder} required aria-describedby="cf-message-error"></textarea>
+          <p class="field__error" id="cf-message-error"></p>
+        </div>
+
+        <button type="submit" class="btn btn--primary contact__submit">
+          <span class="contact__submit-label">{f.submitBtn}</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true" class="contact__icon contact__send"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+          <svg viewBox="0 0 24 24" aria-hidden="true" class="contact__icon contact__spinner"><path d="M21 12a9 9 0 1 1-6.22-8.56" /></svg>
+        </button>
+
+        <p class="contact__status" role="status" aria-live="polite"></p>
+      </form>
     </div>
   </div>
 </section>
 
 <style>
-.contact { overflow: hidden; clip-path: inset(0); }
-
-.contact__bg {
-  position: absolute;
-  bottom: -200px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: min(800px, 100vw);
-  height: min(600px, 100vw);
-  background: radial-gradient(ellipse, rgba(200,169,110,0.07) 0%, transparent 70%);
-  pointer-events: none;
-}
-
 .contact__grid {
   display: grid;
-  grid-template-columns: 1fr 1.1fr;
-  gap: clamp(3rem, 8vw, 8rem);
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: clamp(var(--space-10), 6vw, var(--space-24));
   align-items: start;
 }
 
-.contact__grid > * { min-width: 0; }
+.contact__body { font-size: var(--text-lg); margin-bottom: var(--space-8); }
 
-.contact__title { margin: 1.5rem 0 1.5rem; color: var(--clr-white); }
-.contact__title em { font-style: italic; }
-
-.contact__body { margin-bottom: 1.5rem; line-height: 1.85; }
-
-.contact__note {
-  font-size: 0.82rem;
-  color: var(--clr-text-dim);
-  font-style: italic;
-  border-left: 2px solid var(--clr-accent);
-  padding-left: 1rem;
-  margin-bottom: 3rem;
-  line-height: 1.6;
+.contact__details { display: grid; margin-bottom: var(--space-8); }
+.contact__details > div {
+  display: grid;
+  grid-template-columns: minmax(0, 9rem) minmax(0, 1fr);
+  gap: var(--space-4);
+  align-items: baseline;
+  padding-block: var(--space-3);
+  border-top: var(--rule-w) solid var(--color-rule);
 }
+.contact__details > div:last-child { border-bottom: var(--rule-w) solid var(--color-rule); }
+.contact__value { overflow-wrap: anywhere; }
 
-.contact__details { display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 3rem; }
-.contact__detail { display: flex; flex-direction: column; gap: 0.3rem; }
+.contact__links { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4) var(--space-6); }
+.contact__social { padding-block: var(--space-2); }
+.contact__small { margin-top: var(--space-3); font-size: var(--text-sm); color: var(--color-ink-muted); }
 
-.contact__detail-label {
-  font-size: 0.65rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--clr-text-dim);
-}
+.contact__icon { width: 1rem; height: 1rem; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
-.contact__detail-value {
-  font-size: 0.95rem;
-  color: var(--clr-white);
-  transition: color 0.3s ease;
-}
-
-a.contact__detail-value:hover { color: var(--clr-accent); }
-
-.contact__available {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: #3ecf8e !important;
-}
-
-.contact__dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #3ecf8e;
-  box-shadow: 0 0 8px #3ecf8e;
-  animation: pulse-dot 2s ease-in-out infinite;
-  flex-shrink: 0;
-}
-
-@keyframes pulse-dot {
-  0%, 100% { opacity: 1; box-shadow: 0 0 8px #3ecf8e; }
-  50% { opacity: 0.6; box-shadow: 0 0 3px #3ecf8e; }
-}
-
-.contact__social { display: flex; gap: 1.5rem; }
-
-.contact__social-link {
-  font-size: 0.75rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--clr-text-dim);
+/* Form */
+.contact__form {
   position: relative;
-  transition: color 0.3s ease;
+  display: grid;
+  gap: var(--space-5);
+  padding: clamp(var(--space-5), 4vw, var(--space-10));
+  background: var(--color-paper-2);
+  border: var(--rule-w) solid var(--color-rule);
 }
 
-.contact__social-link::after {
-  content: '';
-  position: absolute;
-  bottom: -3px; left: 0;
-  width: 0; height: 1px;
-  background: var(--clr-accent);
-  transition: width 0.4s var(--ease-out);
+.contact__hp { position: absolute; left: 0; top: 0; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); }
+
+.field { display: grid; gap: var(--space-2); min-width: 0; }
+.field__label { font-size: var(--text-sm); font-weight: 500; }
+
+.field__input {
+  inline-size: 100%;
+  min-inline-size: 0;
+  min-height: var(--control-min);
+  padding: var(--space-3) var(--space-4);
+  font: inherit;
+  font-size: var(--text-base);
+  color: var(--color-ink);
+  background: var(--color-paper);
+  border: var(--rule-w) solid var(--color-rule-strong);
+  border-radius: var(--radius-sm);
+  transition: border-color var(--dur-fast) var(--ease-out);
 }
-
-.contact__social-link:hover { color: var(--clr-accent); }
-.contact__social-link:hover::after { width: 100%; }
-
-.contact__form-wrapper {
-  background: var(--clr-surface);
-  border: 1px solid var(--clr-border);
-  padding: clamp(1.5rem, 4vw, 3.5rem);
-  min-width: 0;
-}
-
-.contact__form { display: flex; flex-direction: column; gap: 1.5rem; }
-.form-group { display: flex; flex-direction: column; gap: 0.5rem; }
-
-.form-label {
-  font-size: 0.7rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--clr-text-muted);
-}
-
-.form-input {
-  background: var(--clr-bg);
-  border: 1px solid var(--clr-border);
-  color: var(--clr-text);
-  font-family: var(--font-body);
-  font-size: 0.9rem;
-  padding: 0.85rem 1rem;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  outline: none;
-  width: 100%;
-  -webkit-appearance: none;
+.field__input::placeholder { color: var(--color-ink-muted); opacity: 0.8; }
+.field__input:hover { border-color: var(--color-ink); }
+.field__input:focus-visible { outline: var(--focus-w) solid var(--color-focus); outline-offset: 0; border-color: var(--color-focus); }
+.field__input[aria-invalid='true'] { border-color: var(--color-error); box-shadow: inset 0 0 0 var(--rule-w) var(--color-error); }
+.field__input:disabled { opacity: 0.5; pointer-events: none; }
+.field__textarea { resize: vertical; min-height: 8rem; }
+.field__select {
   appearance: none;
-}
-
-.form-input::placeholder { color: var(--clr-text-dim); }
-
-.form-input:focus {
-  border-color: var(--clr-accent);
-  box-shadow: 0 0 0 3px rgba(200,169,110,0.14);
-}
-
-.form-select {
-  cursor: pointer;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%233a4d63' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-image:
+    linear-gradient(45deg, transparent 50%, currentColor 50%),
+    linear-gradient(135deg, currentColor 50%, transparent 50%);
+  background-position: calc(100% - 1.25rem) 55%, calc(100% - 0.9rem) 55%;
+  background-size: 0.35rem 0.35rem;
   background-repeat: no-repeat;
-  background-position: right 1rem center;
-  padding-right: 2.5rem;
+  padding-inline-end: var(--space-10);
 }
 
-.form-select option { background: var(--clr-bg); color: var(--clr-text); }
-.form-textarea { resize: vertical; min-height: 130px; }
-.contact__submit { width: 100%; justify-content: center; }
+.field__error { font-size: var(--text-sm); color: var(--color-error); font-weight: 500; }
+.field__error:empty { display: none; }
 
-.contact__calendly {
-  margin-top: 2.5rem;
-  padding-top: 2.5rem;
-  border-top: 1px solid var(--clr-border);
+.contact__submit { justify-self: start; }
+.contact__spinner { display: none; }
+.contact__submit[aria-busy='true'] { pointer-events: none; }
+.contact__submit[aria-busy='true'] .contact__send { display: none; }
+.contact__submit[aria-busy='true'] .contact__spinner { display: block; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(1turn); } }
+
+.contact__status { font-size: var(--text-sm); font-weight: 500; }
+.contact__status:empty { display: none; }
+.contact__status.is-error { color: var(--color-error); }
+
+@media (max-width: 56rem) {
+  .contact__grid { grid-template-columns: minmax(0, 1fr); }
 }
-
-.contact__calendly-note {
-  font-size: 0.72rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--clr-text-dim);
-  margin-bottom: 1rem;
+@media (max-width: 26rem) {
+  .contact__details > div { grid-template-columns: minmax(0, 1fr); gap: var(--space-1); }
 }
-
-.contact__calendly-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  width: 100%;
-  justify-content: center;
-}
-
-@media (max-width: 900px) { .contact__grid { grid-template-columns: 1fr; } }
-
-@media (max-width: 600px) {
-  .contact__form-wrapper { padding: 1.75rem 1.25rem; }
-  .contact__social { flex-wrap: wrap; gap: 1rem; }
+@media (prefers-reduced-motion: reduce) {
+  .contact__submit[aria-busy='true'] .contact__spinner { animation-duration: 2.4s; }
 }
 </style>
 
 <script>
-  const form = document.getElementById('contact-form') as HTMLFormElement;
+  import { validate, submitContact } from '../scripts/contact-form.js';
+
+  const form = document.querySelector<HTMLFormElement>('form.contact__form');
   if (form) {
-    form.addEventListener('submit', (e) => {
+    const msg = JSON.parse(form.dataset.messages || '{}');
+    const btn = form.querySelector<HTMLButtonElement>('.contact__submit')!;
+    const label = btn.querySelector<HTMLElement>('.contact__submit-label')!;
+    const status = form.querySelector<HTMLElement>('.contact__status')!;
+    const fields = {
+      name: form.querySelector<HTMLInputElement>('#cf-name')!,
+      email: form.querySelector<HTMLInputElement>('#cf-email')!,
+      message: form.querySelector<HTMLTextAreaElement>('#cf-message')!,
+    };
+    type Key = keyof typeof fields;
+    const keys = Object.keys(fields) as Key[];
+    const values = () => ({ name: fields.name.value, email: fields.email.value, message: fields.message.value });
+
+    const setError = (key: Key, on: boolean) => {
+      const el = fields[key];
+      el.setAttribute('aria-invalid', String(on));
+      document.getElementById(`${el.id}-error`)!.textContent = on ? msg.errors[key] : '';
+    };
+
+    keys.forEach((key) => {
+      fields[key].addEventListener('input', () => {
+        if (fields[key].getAttribute('aria-invalid') === 'true') setError(key, key in validate(values()));
+      });
+    });
+
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const btn = form.querySelector('.contact__submit') as HTMLButtonElement;
-      const successMsg = btn.dataset.success || 'Sent';
-      btn.innerHTML = `<span>${successMsg}</span>`;
-      btn.style.background = 'linear-gradient(135deg, #3a6b4a, #6dbf80)';
-      btn.disabled = true;
+      status.textContent = '';
+      status.classList.remove('is-error');
+
+      const errors = validate(values());
+      keys.forEach((k) => setError(k, k in errors));
+      const first = keys.find((k) => k in errors);
+      if (first) { fields[first].focus(); return; }
+
+      btn.setAttribute('aria-busy', 'true');
+      label.textContent = msg.sending;
+      try {
+        await submitContact(Object.fromEntries(new FormData(form)) as Record<string, string>);
+        form.reset();
+        status.textContent = msg.success;
+      } catch {
+        status.classList.add('is-error');
+        status.textContent = msg.errors.network;
+      } finally {
+        btn.removeAttribute('aria-busy');
+        label.textContent = msg.submit;
+      }
     });
   }
 </script>

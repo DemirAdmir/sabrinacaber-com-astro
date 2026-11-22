@@ -82,3 +82,30 @@ for (const lang of LANGS) {
     assert.ok(!/style="[^"]*#[0-9a-f]{3,6}/i.test(s), 'inline item colour found');
   });
 }
+
+const FORM_LANG = { en: 'en', fr: 'fr', bhs: 'bhs' };
+
+for (const lang of LANGS) {
+  test(`${lang}: contact form is wired for Netlify Forms`, () => {
+    const s = section(load(lang), 'contact');
+    const form = s.match(/<form[^>]*>/)[0];
+    assert.match(form, /name="contact"/);
+    assert.match(form, /method="POST"/i);
+    assert.match(form, /data-netlify="true"/);
+    assert.match(form, /netlify-honeypot="bot-field"/);
+    assert.match(s, /<input[^>]*type="hidden"[^>]*name="form-name"[^>]*value="contact"/);
+    assert.match(s, new RegExp(`<input[^>]*type="hidden"[^>]*name="lang"[^>]*value="${FORM_LANG[lang]}"`));
+    assert.match(s, /name="bot-field"/);
+  });
+
+  test(`${lang}: contact inputs are labelled and point to their error text`, () => {
+    const s = section(load(lang), 'contact');
+    for (const id of ['cf-name', 'cf-email', 'cf-message']) {
+      assert.match(s, new RegExp(`<label[^>]*for="${id}"`));
+      const field = s.match(new RegExp(`<(input|textarea)[^>]*id="${id}"[^>]*>`))[0];
+      assert.match(field, new RegExp(`aria-describedby="${id}-error"`));
+      assert.match(s, new RegExp(`id="${id}-error"`));
+    }
+    assert.match(s, /role="status"/);
+  });
+}
