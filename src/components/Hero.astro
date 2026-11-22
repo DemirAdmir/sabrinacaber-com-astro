@@ -15,8 +15,8 @@ const others = (Object.keys(phrases) as Lang[]).filter((l) => l !== lang);
       <p class="label hero__eyebrow">{t.eyebrow}</p>
 
       <h1 class="hero__title">
-        <span class="hero__phrase">{phrases[lang]}</span>
-        {others.map((l) => <span class="hero__sizer" aria-hidden="true">{phrases[l]}</span>)}
+        <span class="hero__phrase" data-phrase={lang}>{phrases[lang]}</span>
+        {others.map((l) => <span class="hero__sizer" aria-hidden="true" data-phrase={l}>{phrases[l]}</span>)}
         <span class="hero__morph" aria-hidden="true"></span>
       </h1>
 
