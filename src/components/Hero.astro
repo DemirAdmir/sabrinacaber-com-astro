@@ -131,19 +131,12 @@ const others = (Object.keys(phrases) as Lang[]).filter((l) => l !== lang);
   aspect-ratio: 4 / 5;
   object-fit: cover;
   object-position: 50% 20%;
-  filter: grayscale(1) contrast(1.05);
-  transition: filter var(--dur-slow) var(--ease-out);
 }
-.hero__portrait:hover img { filter: none; }
 
 @media (max-width: 56rem) {
   .hero__grid { grid-template-columns: minmax(0, 1fr); }
   .hero__split { display: none; }
   .hero__portrait { order: -1; max-width: min(14rem, 100%); }
   .hero__portrait img { aspect-ratio: 1; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero__portrait img { transition: none; }
 }
 </style>

@@ -26,6 +26,9 @@ export function morphFrame(from, to, progress, rand = Math.random) {
     if (target === ' ') { out += ' '; continue; }
     const threshold = (0.85 * (i + 1)) / to.length + 0.15 * jitter(i);
     if (target !== undefined && progress >= threshold) out += target;
+    // Unsettled: keep the source's word breaks too, so no frame forms a word
+    // longer than either phrase has (that would wrap and shift the layout).
+    else if (from[i] === ' ') out += ' ';
     else out += GLYPHS[Math.floor(rand() * GLYPHS.length)];
   }
   return out;

@@ -147,6 +147,8 @@ function initScramble() {
 
 export function initMotion() {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  // Without IntersectionObserver nothing would ever be revealed, so stay static.
+  if (!('IntersectionObserver' in window)) return;
   document.documentElement.classList.add('motion');
   initHero();
   initReveals();

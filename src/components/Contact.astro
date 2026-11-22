@@ -201,7 +201,7 @@ const messages = JSON.stringify({ errors: f.errors, sending: f.sending, success:
 </style>
 
 <script>
-  import { validate, submitContact } from '../scripts/contact-form.js';
+  import { validate, submitContact, guardInFlight } from '../scripts/contact-form.js';
 
   const form = document.querySelector<HTMLFormElement>('form.contact__form');
   if (form) {
@@ -230,16 +230,7 @@ const messages = JSON.stringify({ errors: f.errors, sending: f.sending, success:
       });
     });
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      status.textContent = '';
-      status.classList.remove('is-error');
-
-      const errors = validate(values());
-      keys.forEach((k) => setError(k, k in errors));
-      const first = keys.find((k) => k in errors);
-      if (first) { fields[first].focus(); return; }
-
+    const send = guardInFlight(async () => {
       btn.setAttribute('aria-busy', 'true');
       label.textContent = msg.sending;
       try {
@@ -253,6 +244,20 @@ const messages = JSON.stringify({ errors: f.errors, sending: f.sending, success:
         btn.removeAttribute('aria-busy');
         label.textContent = msg.submit;
       }
+    });
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (btn.getAttribute('aria-busy') === 'true') return;
+      status.textContent = '';
+      status.classList.remove('is-error');
+
+      const errors = validate(values());
+      keys.forEach((k) => setError(k, k in errors));
+      const first = keys.find((k) => k in errors);
+      if (first) { fields[first].focus(); return; }
+
+      send();
     });
   }
 </script>

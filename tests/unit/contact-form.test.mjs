@@ -37,3 +37,17 @@ test('submitContact propagates network errors', async () => {
   const fake = async () => { throw new TypeError('Failed to fetch'); };
   await assert.rejects(submitContact({}, fake), /Failed to fetch/);
 });
+
+test('guardInFlight ignores calls while a submission is running', async () => {
+  const { guardInFlight } = await import('../../src/scripts/contact-form.js');
+  let calls = 0;
+  let release;
+  const guarded = guardInFlight(() => { calls++; return new Promise((r) => { release = r; }); });
+  const first = guarded();
+  const second = guarded();
+  assert.equal(calls, 1);
+  release();
+  await first; await second;
+  guarded(); release();
+  assert.equal(calls, 2);
+});

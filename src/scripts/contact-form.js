@@ -22,6 +22,22 @@ export function encode(data) {
 }
 
 /**
+ * Wraps an async function so calls made while one is still running are ignored
+ * (Enter pressed again during a send must not post twice).
+ * @template T
+ * @param {() => Promise<T>} fn
+ * @returns {() => Promise<T | undefined>}
+ */
+export function guardInFlight(fn) {
+  let running = false;
+  return async () => {
+    if (running) return undefined;
+    running = true;
+    try { return await fn(); } finally { running = false; }
+  };
+}
+
+/**
  * Posts to Netlify Forms. Resolves only on a 2xx response.
  * @param {Record<string, string>} data
  * @param {typeof fetch} fetchImpl

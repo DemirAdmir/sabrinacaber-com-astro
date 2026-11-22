@@ -31,3 +31,10 @@ for (const lang of LANGS) {
     assert.ok(bundled.includes('prefers-reduced-motion'), 'motion guard missing from bundle');
   });
 }
+
+test('motion opts in only when IntersectionObserver exists', () => {
+  const html = load('en');
+  const srcs = [...html.matchAll(/<script[^>]*src="([^"]+)"/g)].map((m) => m[1]);
+  const bundled = srcs.map((s) => readFileSync('dist' + s, 'utf8')).join('\n');
+  assert.match(bundled, /"IntersectionObserver"\s*in\s*window/);
+});

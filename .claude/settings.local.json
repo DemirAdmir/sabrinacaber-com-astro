@@ -46,7 +46,11 @@
       "Bash(node -e 'const s=require\\(\"fs\"\\).readFileSync\\(\"dist/index.html\",\"utf8\"\\);for\\(const m of s.matchAll\\(/\\(?![←-⇿]\\)[\\\\p{Extended_Pictographic}✓✔◆]/gu\\)\\)console.log\\(m[0].codePointAt\\(0\\).toString\\(16\\),s.slice\\(m.index-80,m.index+5\\)\\)')",
       "Bash(npx astro *)",
       "Bash(npm test *)",
-      "Bash(cd /Users/admirdemir && ls node_modules | grep -i -E \"^playwright|^puppeteer|axe\" ; head -20 scripts/verify_responsive.mjs)"
+      "Bash(cd /Users/admirdemir && ls node_modules | grep -i -E \"^playwright|^puppeteer|axe\" ; head -20 scripts/verify_responsive.mjs)",
+      "Bash(grep -v \"^\\\\s*$\")",
+      "Bash(ls /Users/admirdemir/Library/Caches/ms-playwright/; ls \"/Applications/Google Chrome.app\" >/dev/null 2>&1 && echo chrome)",
+      "Bash(pkill -f \"http.server 4791\")",
+      "Bash(grep -n \"import { validate\\\\|form.addEventListener\\('submit'\\\\|e.preventDefault\\\\|^    }\\);$\" src/components/Contact.astro)"
     ]
   }
 }
