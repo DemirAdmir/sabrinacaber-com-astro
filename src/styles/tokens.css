@@ -1,0 +1,105 @@
+/* Two Voices — design tokens. The only place raw values live.
+   Contrast measured with scripts/contrast.py:
+   light  ink/paper 13.58  muted/paper 7.01  accent/paper 5.22  accent-ink/accent 5.70
+   dark   ink/paper 14.91  muted/paper 8.41  accent/paper 7.85  accent-ink/accent 7.85 */
+
+:root {
+  color-scheme: light dark;
+
+  /* Primitives */
+  --paper-50: #f5f0e6;
+  --paper-100: #ece5d6;
+  --paper-300: #d6cdbb;
+  --ink-900: #1b2340;
+  --ink-600: #4a5068;
+  --vermilion-600: #b5381a;
+  --vermilion-700: #9a2f14;
+  --cream: #fffaf2;
+  --night-950: #10142a;
+  --night-900: #171c36;
+  --night-700: #2a3050;
+  --sand-100: #efe8da;
+  --mist-300: #aab0c4;
+  --coral-400: #ff8a65;
+  --coral-300: #ffa385;
+
+  /* Semantic: light */
+  --color-paper: var(--paper-50);
+  --color-paper-2: var(--paper-100);
+  --color-ink: var(--ink-900);
+  --color-ink-muted: var(--ink-600);
+  --color-rule: var(--paper-300);
+  --color-rule-strong: var(--ink-600);
+  --color-accent: var(--vermilion-600);
+  --color-accent-hover: var(--vermilion-700);
+  --color-accent-ink: var(--cream);
+  --color-focus: var(--vermilion-600);
+  --color-error: var(--vermilion-700);
+
+  /* Type */
+  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1.0625rem;
+  --text-lg: 1.25rem;
+  --text-xl: clamp(1.375rem, 1.1rem + 1vw, 1.75rem);
+  --text-2xl: clamp(1.75rem, 1.3rem + 2vw, 2.5rem);
+  --text-3xl: clamp(2rem, 1.4rem + 4vw, 4.25rem);
+  --text-display: clamp(2.25rem, 1.2rem + 6.4vw, 7rem);
+  --leading-tight: 1.05;
+  --leading-snug: 1.25;
+  --leading-body: 1.6;
+  --tracking-caps: 0.14em;
+  --measure: 65ch;
+
+  /* Space: 4px base */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+  --section-pad: clamp(var(--space-20), 12vw, 10rem);
+  --gutter: clamp(var(--space-4), 5vw, var(--space-16));
+  --container: 76rem;
+  --header-h: 4.5rem;
+
+  /* Shape */
+  --radius-xs: 0.125rem;
+  --radius-sm: 0.25rem;
+  --rule-w: 1px;
+  --focus-w: 2px;
+  --focus-offset: 3px;
+  --control-min: 2.75rem;
+
+  /* Motion */
+  --dur-fast: 200ms;
+  --dur-base: 400ms;
+  --dur-slow: 700ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --reveal-distance: 1.5rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-paper: var(--night-950);
+    --color-paper-2: var(--night-900);
+    --color-ink: var(--sand-100);
+    --color-ink-muted: var(--mist-300);
+    --color-rule: var(--night-700);
+    --color-rule-strong: var(--mist-300);
+    --color-accent: var(--coral-400);
+    --color-accent-hover: var(--coral-300);
+    --color-accent-ink: var(--night-950);
+    --color-focus: var(--coral-400);
+    --color-error: var(--coral-300);
+  }
+}

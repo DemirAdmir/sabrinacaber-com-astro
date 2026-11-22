@@ -1,0 +1,85 @@
+---
+import SectionTitle from './SectionTitle.astro';
+import { translations, type Lang } from '../i18n/translations';
+interface Props { lang?: Lang; }
+const { lang = 'en' } = Astro.props;
+const t = translations[lang].process;
+const note = translations[lang].about.note;
+const altLang = lang === 'fr' ? 'en' : 'fr';
+---
+
+<section id="process" class="section process" aria-labelledby="process-title">
+  <div class="container">
+    <SectionTitle id="process" eyebrow={t.tag} line1={t.titleLine1} line2={t.titleLine2} alt={t.titleAlt} altLang={altLang} />
+
+    <ol class="process__steps">
+      {t.steps.map((s, i) => (
+        <li class="step" data-reveal>
+          <span class="step__num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+          <h3 class="step__title">{s.title}</h3>
+          <p class="step__body">{s.body}</p>
+        </li>
+      ))}
+    </ol>
+
+    <p class="process__note" data-reveal>{note}</p>
+  </div>
+</section>
+
+<style>
+.process { background: var(--color-paper-2); }
+
+.process__steps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-8);
+  counter-reset: step;
+}
+
+.step {
+  position: relative;
+  padding-top: var(--space-8);
+  border-top: var(--rule-w) solid var(--color-rule-strong);
+}
+
+/* A marker on the connecting line */
+.step::before {
+  content: '';
+  position: absolute;
+  top: calc(-1 * var(--space-1) - var(--rule-w) / 2);
+  inset-inline-start: 0;
+  width: var(--space-2);
+  height: var(--space-2);
+  border-radius: 50%;
+  background: var(--color-accent);
+}
+
+.step__num {
+  display: block;
+  font-family: var(--font-display);
+  font-size: var(--text-3xl);
+  line-height: 1;
+  color: var(--color-accent);
+  margin-bottom: var(--space-4);
+}
+
+.step__title { font-size: var(--text-xl); margin-bottom: var(--space-3); }
+
+.step__body { color: var(--color-ink-muted); font-size: var(--text-sm); }
+
+.process__note {
+  margin-top: var(--space-16);
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: var(--text-xl);
+  max-width: 40ch;
+}
+
+@media (max-width: 56rem) {
+  .process__steps { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: var(--space-12); }
+}
+
+@media (max-width: 30rem) {
+  .process__steps { grid-template-columns: minmax(0, 1fr); }
+}
+</style>

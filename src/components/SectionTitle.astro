@@ -1,0 +1,54 @@
+---
+interface Props {
+  id: string;
+  eyebrow: string;
+  line1: string;
+  line2: string;
+  alt: string;
+  altLang: string;
+}
+const { id, eyebrow, line1, line2, alt, altLang } = Astro.props;
+---
+
+<header class="section-title" data-reveal>
+  <p class="label section-title__eyebrow">
+    <span class="section-title__rule" aria-hidden="true" data-rule></span>
+    {eyebrow}
+  </p>
+  <h2 id={`${id}-title`} class="section-title__heading">
+    {line1} <em>{line2}</em>
+  </h2>
+  <span class="section-alt" aria-hidden="true" lang={altLang} data-scramble>{alt}</span>
+</header>
+
+<style>
+.section-title { margin-bottom: clamp(var(--space-10), 6vw, var(--space-20)); }
+
+.section-title__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+}
+.section-title__rule {
+  display: inline-block;
+  width: var(--space-10);
+  height: var(--rule-w);
+  background: var(--color-accent);
+}
+
+.section-title__heading {
+  font-size: var(--text-3xl);
+  max-width: 18ch;
+}
+.section-title__heading em { font-style: italic; color: var(--color-accent); }
+
+.section-alt {
+  display: block;
+  margin-top: var(--space-3);
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: var(--text-lg);
+  color: var(--color-ink-muted);
+}
+</style>

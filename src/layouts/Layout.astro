@@ -1,6 +1,7 @@
 ---
 import Nav from '../components/Nav.astro';
 import { translations, type Lang } from '../i18n/translations';
+import '../styles/tokens.css';
 import '../styles/global.css';
 
 interface Props {
@@ -14,157 +15,144 @@ const t = translations[lang];
 const pageTitle = title ?? t.meta.title;
 const pageDesc = description ?? t.meta.description;
 
-const langConfig: Record<Lang, { url: string; href: string; label: string; flag: string }> = {
-  en: { url: '/', href: 'https://www.sabrinacaber.com/', label: 'English version', flag: '\uD83C\uDDEC\uD83C\uDDE7' },
-  fr: { url: '/fr/', href: 'https://www.sabrinacaber.com/fr/', label: 'Version fran\u00e7aise', flag: '\uD83C\uDDEB\uD83C\uDDF7' },
-  bhs: { url: '/bhs/', href: 'https://www.sabrinacaber.com/bhs/', label: 'BHS verzija', flag: '\uD83C\uDDE7\uD83C\uDDE6' },
+const SITE = 'https://www.sabrinacaber.com';
+const langConfig: Record<Lang, { url: string; htmlLang: string; label: string }> = {
+  en: { url: '/', htmlLang: 'en', label: 'English' },
+  fr: { url: '/fr/', htmlLang: 'fr', label: 'Français' },
+  bhs: { url: '/bhs/', htmlLang: 'bs', label: 'Bosanski' },
+};
+const skipLabel: Record<Lang, string> = {
+  en: 'Skip to content',
+  fr: 'Aller au contenu',
+  bhs: 'Preskoči na sadržaj',
 };
 const otherLangs = (Object.keys(langConfig) as Lang[]).filter((l) => l !== lang);
+const year = new Date().getFullYear();
 ---
 
 <!doctype html>
-<html lang={lang}>
+<html lang={langConfig[lang].htmlLang} class="no-js">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script is:inline>document.documentElement.classList.replace('no-js', 'js');</script>
   <meta name="description" content={pageDesc} />
   <meta name="author" content="Sabrina Caber" />
+  <meta name="color-scheme" content="light dark" />
   <meta property="og:title" content={pageTitle} />
   <meta property="og:description" content={pageDesc} />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://www.sabrinacaber.com" />
-  <link rel="alternate" hreflang="en" href="https://www.sabrinacaber.com/" />
-  <link rel="alternate" hreflang="fr" href="https://www.sabrinacaber.com/fr/" />
-  <link rel="alternate" hreflang="bs" href="https://www.sabrinacaber.com/bhs/" />
-  <link rel="alternate" hreflang="hr" href="https://www.sabrinacaber.com/bhs/" />
-  <link rel="alternate" hreflang="sr" href="https://www.sabrinacaber.com/bhs/" />
-  <link rel="alternate" hreflang="x-default" href="https://www.sabrinacaber.com/" />
+  <meta property="og:url" content={SITE + langConfig[lang].url} />
+  <meta property="og:image" content={SITE + '/sabrina.png'} />
+  <link rel="canonical" href={SITE + langConfig[lang].url} />
+  <link rel="alternate" hreflang="en" href={SITE + '/'} />
+  <link rel="alternate" hreflang="fr" href={SITE + '/fr/'} />
+  <link rel="alternate" hreflang="bs" href={SITE + '/bhs/'} />
+  <link rel="alternate" hreflang="hr" href={SITE + '/bhs/'} />
+  <link rel="alternate" hreflang="sr" href={SITE + '/bhs/'} />
+  <link rel="alternate" hreflang="x-default" href={SITE + '/'} />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Inter:wght@400;500;600&display=swap"
+  />
   <title>{pageTitle}</title>
 </head>
 <body>
+  <a class="skip-link" href="#main">{skipLabel[lang]}</a>
   <Nav lang={lang} />
-  <main>
+  <main id="main" tabindex="-1">
     <slot />
   </main>
   <footer class="footer">
-    <div class="container">
-      <div class="footer__inner">
-        <div class="footer__brand">
-          <a href={langConfig[lang].url} class="footer__logo">Sabrina Caber</a>
-          <p class="footer__tagline">{t.footer.tagline}</p>
-        </div>
-        <div class="footer__links">
-          <a href="#about">{t.footer.links.about}</a>
-          <a href="#services">{t.footer.links.services}</a>
-          <a href="#work">{t.footer.links.experience}</a>
-          <a href="#contact">{t.footer.links.contact}</a>
-        </div>
-        <div class="footer__contact">
-          <a href="mailto:sabrinacaber@gmail.com" class="footer__contact-link">sabrinacaber@gmail.com</a>
-          <a href="tel:+38761997090" class="footer__contact-link">+387 61-997-090</a>
-          <a href="https://linkedin.com/in/sabrinacaber" target="_blank" rel="noopener noreferrer" class="footer__contact-link">LinkedIn</a>
-          {otherLangs.map((l) => (
-            <a href={langConfig[l].url} class="footer__contact-link footer__lang-switch" lang={l}>
-              {langConfig[l].flag} {langConfig[l].label}
-            </a>
-          ))}
-        </div>
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <a href={langConfig[lang].url} class="footer__logo">Sabrina Caber</a>
+        <p class="footer__tagline">{t.footer.tagline}</p>
       </div>
-      <div class="footer__bottom">
-        <p>&copy; {new Date().getFullYear()} Sabrina Caber. {t.footer.copyright}</p>
-        <p>{t.footer.developedBy} <a href="https://admirdemir.com" target="_blank" rel="noopener noreferrer" class="footer__dev-link">admirdemir.com</a></p>
+      <nav class="footer__col" aria-label={t.footer.tagline}>
+        <a class="link" href="#about">{t.footer.links.about}</a>
+        <a class="link" href="#services">{t.footer.links.services}</a>
+        <a class="link" href="#process">{t.footer.links.process}</a>
+        <a class="link" href="#work">{t.footer.links.experience}</a>
+        <a class="link" href="#contact">{t.footer.links.contact}</a>
+      </nav>
+      <div class="footer__col">
+        <a class="link footer__email" href="mailto:sabrinacaber@gmail.com">sabrinacaber@gmail.com</a>
+        <a class="link" href="https://linkedin.com/in/sabrinacaber" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        {otherLangs.map((l) => (
+          <a class="link" href={langConfig[l].url} lang={langConfig[l].htmlLang} hreflang={langConfig[l].htmlLang}>
+            {langConfig[l].label}
+          </a>
+        ))}
       </div>
+    </div>
+    <div class="container footer__bottom">
+      <p>&copy; {year} Sabrina Caber. {t.footer.copyright}</p>
+      <p>
+        {t.footer.developedBy}
+        <a class="link" href="https://admirdemir.com" target="_blank" rel="noopener noreferrer">admirdemir.com</a>
+      </p>
     </div>
   </footer>
 </body>
 </html>
 
+<script>
+  import { initMotion } from '../scripts/motion.js';
+  initMotion();
+</script>
+
 <style>
+main:focus { outline: none; }
+
 .footer {
-  padding: 5rem 0 2rem;
-  border-top: 1px solid var(--clr-border);
-  background: var(--clr-bg-2);
-  position: relative;
-  z-index: 1;
+  border-top: var(--rule-w) solid var(--color-rule);
+  padding-block: var(--space-16) var(--space-8);
+  font-size: var(--text-sm);
 }
 
 .footer__inner {
   display: grid;
-  grid-template-columns: 1fr auto auto;
-  align-items: start;
-  gap: 3rem;
-  margin-bottom: 4rem;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--space-12);
 }
-
-.footer__inner > * { min-width: 0; }
 
 .footer__logo {
   font-family: var(--font-display);
-  font-size: 1.8rem;
-  font-weight: 300;
-  color: var(--clr-white);
-  display: block;
-  margin-bottom: 0.5rem;
-  transition: color 0.3s ease;
+  font-size: var(--text-2xl);
+  text-decoration: none;
+  display: inline-block;
+  margin-bottom: var(--space-2);
 }
 
-.footer__logo:hover { color: var(--clr-accent); }
+.footer__tagline { color: var(--color-ink-muted); }
 
-.footer__tagline { font-size: 0.8rem; color: var(--clr-text-dim); letter-spacing: 0.05em; }
-
-.footer__links { display: flex; flex-direction: column; gap: 0.75rem; }
-
-.footer__links a {
-  font-size: 0.8rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--clr-text-muted);
-  transition: color 0.3s ease;
+.footer__col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
 }
+.footer__col .link { padding-block: var(--space-1); }
 
-.footer__links a:hover { color: var(--clr-accent); }
-
-.footer__contact { display: flex; flex-direction: column; gap: 0.75rem; }
-
-.footer__contact-link {
-  font-size: 0.8rem;
-  color: var(--clr-text-dim);
-  transition: color 0.3s ease;
-}
-
-.footer__contact-link:hover { color: var(--clr-accent); }
-
-.footer__lang-switch {
-  margin-top: 0.25rem;
-  font-size: 0.75rem;
-  color: var(--clr-text-dim);
-  border-top: 1px solid var(--clr-border);
-  padding-top: 0.75rem;
-}
+.footer__email { overflow-wrap: anywhere; }
 
 .footer__bottom {
   display: flex;
-  justify-content: space-between;
-  padding-top: 2rem;
-  border-top: 1px solid var(--clr-border);
   flex-wrap: wrap;
-  gap: 0.5rem;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-top: var(--space-12);
+  padding-top: var(--space-6);
+  border-top: var(--rule-w) solid var(--color-rule);
+  color: var(--color-ink-muted);
+  font-size: var(--text-xs);
 }
 
-.footer__bottom p { font-size: 0.72rem; color: var(--clr-text-dim); }
-
-.footer__dev-link { color: var(--clr-accent); transition: opacity 0.3s ease; }
-.footer__dev-link:hover { opacity: 0.7; }
-
-@media (max-width: 768px) {
-  .footer__inner { grid-template-columns: 1fr 1fr; }
-  .footer__brand { grid-column: 1 / -1; }
-}
-
-@media (max-width: 600px) {
-  .footer__inner { grid-template-columns: 1fr; gap: 2rem; }
-  .footer__links { flex-direction: row; flex-wrap: wrap; gap: 1rem; }
-  .footer__bottom { flex-direction: column; gap: 0.5rem; }
+@media (max-width: 48rem) {
+  .footer__inner { grid-template-columns: minmax(0, 1fr); gap: var(--space-8); }
 }
 </style>

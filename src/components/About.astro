@@ -1,208 +1,125 @@
 ---
+import SectionTitle from './SectionTitle.astro';
 import { translations, type Lang } from '../i18n/translations';
 interface Props { lang?: Lang; }
 const { lang = 'en' } = Astro.props;
 const t = translations[lang].about;
+const altLang = lang === 'fr' ? 'en' : 'fr';
 ---
 
-<section id="about" class="about">
-  <div class="about__bg-orb" aria-hidden="true"></div>
+<section id="about" class="section about" aria-labelledby="about-title">
   <div class="container">
-    <div class="about__grid">
-      <!-- Left: visual -->
-      <div class="about__visual">
-        <div class="about__image-wrapper">
-          <div class="about__image-frame"></div>
-          <div class="about__image-placeholder">
-            <img src="/sabrina.png" alt="Sabrina Caber" class="about__photo" />
-          </div>
-          <div class="about__image-accent"></div>
-        </div>
-        <div class="about__stats">
-          {t.stats.map((s) => (
-            <div class="about__stat">
-              <span class="about__stat-num">{s.num}</span>
-              <span class="about__stat-label">{s.label}</span>
-            </div>
-          ))}
-        </div>
-      </div>
+    <SectionTitle id="about" eyebrow={t.tag} line1={t.titleLine1} line2={t.titleLine2} alt={t.titleAlt} altLang={altLang} />
 
-      <!-- Right: content -->
+    <div class="about__grid">
+      <ul class="about__facts">
+        {t.facts.map((f) => (
+          <li class="fact" data-reveal>
+            <span class="fact__value">{f.value}</span>
+            <span class="fact__label">{f.label}</span>
+          </li>
+        ))}
+      </ul>
+
       <div class="about__content">
-        <p class="about__overline tag">{t.tag}</p>
-        <div class="divider"></div>
-        <h2 class="about__title">
-          {t.titleLine1}<br />
-          <em>{t.titleLine2}</em>
-        </h2>
-        <p class="about__body">{t.body1}</p>
-        <p class="about__body">{t.body2}</p>
-        <p class="about__note">{t.note}</p>
-        <div class="about__skills">
-          {t.skills.map((s) => <span class="tag">{s}</span>)}
-        </div>
-        <a href="#contact" class="btn btn-outline about__cta">
-          <span>{t.cta}</span>
-        </a>
+        <p class="about__lead" data-reveal>{t.body1}</p>
+        <p class="about__body" data-reveal>{t.body2}</p>
+
+        <aside class="about__note" data-reveal>
+          <svg viewBox="0 0 24 24" aria-hidden="true" class="about__note-icon"><rect x="4" y="11" width="16" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></svg>
+          <p>{t.note}</p>
+        </aside>
+
+        <ul class="about__skills" data-reveal>
+          {t.skills.map((s) => <li>{s}</li>)}
+        </ul>
       </div>
     </div>
   </div>
 </section>
 
 <style>
-.about { overflow: hidden; clip-path: inset(0); }
-
-.about__bg-orb {
-  position: absolute;
-  top: -150px;
-  right: 0;
-  transform: translateX(30%);
-  width: clamp(300px, 50vw, 500px);
-  height: clamp(300px, 50vw, 500px);
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(200,169,110,0.08) 0%, transparent 70%);
-  pointer-events: none;
-}
-
 .about__grid {
   display: grid;
-  grid-template-columns: 1fr 1.2fr;
-  gap: clamp(3rem, 8vw, 8rem);
-  align-items: center;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(var(--space-10), 6vw, var(--space-24));
+  align-items: start;
 }
 
-.about__grid > * { min-width: 0; }
+.about__facts { display: grid; }
 
-.about__visual { display: flex; flex-direction: column; gap: 3rem; }
-
-.about__image-wrapper {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 3/4;
-  max-width: 260px;
-}
-
-.about__image-placeholder {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, var(--clr-surface) 0%, var(--clr-surface-2) 100%);
-  border: 1px solid var(--clr-border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-.about__photo {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center top;
-  display: block;
-}
-
-.about__image-frame {
-  position: absolute;
-  top: -16px; left: -16px; right: 16px; bottom: 16px;
-  border: 1px solid var(--clr-border);
-  pointer-events: none;
-  z-index: -1;
-}
-
-.about__image-accent {
-  position: absolute;
-  bottom: -24px; right: -24px;
-  width: 100px; height: 100px;
-  border-bottom: 2px solid var(--clr-accent);
-  border-right: 2px solid var(--clr-accent);
-}
-
-.about__stats {
+.fact {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
+  gap: var(--space-1);
+  padding-block: var(--space-5);
+  border-top: var(--rule-w) solid var(--color-rule);
 }
+.fact:last-child { border-bottom: var(--rule-w) solid var(--color-rule); }
 
-.about__stat {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  padding: 1.5rem 1.25rem;
-  border: 1px solid var(--clr-border);
-  background: var(--clr-surface);
-  position: relative;
-  overflow: hidden;
-  transition: border-color 0.4s var(--ease-out), background 0.4s var(--ease-out);
-}
-
-.about__stat::before {
-  content: '';
-  position: absolute;
-  bottom: 0; left: 0;
-  width: 0; height: 2px;
-  background: linear-gradient(90deg, var(--clr-accent), var(--clr-accent-2));
-  transition: width 0.6s var(--ease-out);
-}
-
-.about__stat:hover { border-color: var(--clr-border-strong); background: var(--clr-surface-2); }
-.about__stat:hover::before { width: 100%; }
-
-.about__stat-num {
+.fact__value {
   font-family: var(--font-display);
-  font-size: clamp(2.4rem, 4vw, 3.2rem);
-  font-weight: 400;
-  color: var(--clr-accent);
-  line-height: 1;
-  letter-spacing: -0.02em;
+  font-size: var(--text-2xl);
+  line-height: var(--leading-snug);
+}
+.fact__label { font-size: var(--text-sm); color: var(--color-ink-muted); }
+
+.about__lead {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  line-height: var(--leading-snug);
+  margin-bottom: var(--space-6);
 }
 
-.about__stat-label {
-  font-size: 0.62rem;
-  letter-spacing: 0.12em;
-  color: var(--clr-text-dim);
-  text-transform: uppercase;
-  font-weight: 500;
-}
-
-.about__overline { margin-bottom: 0; }
-
-.about__title { margin: 1.5rem 0; color: var(--clr-white); }
-.about__title em { font-style: italic; color: var(--clr-accent); }
-
-.about__body { margin-bottom: 1.5rem; line-height: 1.85; }
+.about__body { color: var(--color-ink-muted); margin-bottom: var(--space-8); }
 
 .about__note {
-  font-size: 0.82rem;
-  color: var(--clr-text-dim);
-  font-style: italic;
-  border-left: 2px solid var(--clr-accent);
-  padding-left: 1rem;
-  margin-bottom: 2rem;
-  line-height: 1.6;
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+  padding: var(--space-5);
+  background: var(--color-paper-2);
+  border-inline-start: var(--focus-w) solid var(--color-accent);
+  margin-bottom: var(--space-8);
+  font-size: var(--text-sm);
+}
+.about__note-icon {
+  flex: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-top: var(--space-1);
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
-.about__skills { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 2rem 0; }
-.about__cta { margin-top: 0.5rem; }
-
-@media (max-width: 900px) {
-  .about__grid { grid-template-columns: 1fr; }
-  .about__image-wrapper { max-width: 200px; }
-  .about__visual { flex-direction: row; align-items: flex-start; gap: 2rem; }
-  .about__stats { grid-template-columns: 1fr; flex: 1; }
+.about__skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-5);
+  font-size: var(--text-sm);
+  color: var(--color-ink-muted);
+}
+.about__skills li { display: inline-flex; align-items: center; gap: var(--space-5); }
+.about__skills li + li::before {
+  content: '';
+  width: var(--space-1);
+  height: var(--space-1);
+  border-radius: 50%;
+  background: var(--color-accent);
+  margin-inline-start: calc(-1 * var(--space-5) + var(--space-2));
+  margin-inline-end: calc(-1 * var(--space-5) + var(--space-2) + var(--space-1));
 }
 
-@media (max-width: 700px) {
-  .about__visual { flex-direction: column; }
-  .about__image-wrapper { max-width: 100%; aspect-ratio: 4/3; overflow: hidden; }
-  .about__image-frame { display: none; }
-  .about__image-accent { display: none; }
+@media (max-width: 56rem) {
+  .about__grid { grid-template-columns: minmax(0, 1fr); }
+  .about__facts { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-6); }
+  .fact:nth-last-child(2) { border-bottom: var(--rule-w) solid var(--color-rule); }
 }
 
-@media (max-width: 600px) {
-  .about__stats { grid-template-columns: repeat(3, 1fr); gap: 0.4rem; }
-  .about__stat { padding: 0.9rem 0.6rem; }
-  .about__stat-num { font-size: 1.4rem; }
-  .about__stat-label { font-size: 0.55rem; letter-spacing: 0.03em; }
+@media (max-width: 24rem) {
+  .about__facts { grid-template-columns: minmax(0, 1fr); }
+  .fact:nth-last-child(2) { border-bottom: 0; }
 }
 </style>
