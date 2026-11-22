@@ -55,6 +55,15 @@ const langs = Object.keys(langConfig) as Lang[];
     <nav class="container nav__mobile-links" aria-label={ui[lang].main}>
       {links.map((l) => <a class="nav__mobile-link" href={l.href}>{l.label}</a>)}
       <a href="#contact" class="btn btn--primary nav__mobile-cta">{t.cta}</a>
+      <div class="nav__lang nav__lang--menu" role="group" aria-label={ui[lang].language}>
+        {langs.map((l) =>
+          l === lang ? (
+            <span class="nav__lang-item is-current" aria-current="true">{langConfig[l].label}</span>
+          ) : (
+            <a class="nav__lang-item" href={langConfig[l].url} hreflang={langConfig[l].code} lang={langConfig[l].code}>{langConfig[l].label}</a>
+          )
+        )}
+      </div>
     </nav>
   </div>
 </header>
@@ -156,10 +165,14 @@ a.nav__lang-item:hover { color: var(--color-accent); }
   .nav__toggle { display: inline-flex; }
 }
 
-@media (max-width: 22rem) {
-  .nav__bar { gap: var(--space-2); }
-  .nav__right { gap: var(--space-1); }
-  .nav__lang-item { min-width: 2rem; }
+.nav__lang--menu { display: none; margin-top: var(--space-6); margin-inline-start: calc(-1 * var(--space-1)); }
+
+.nav__logo { min-width: 0; overflow-wrap: anywhere; }
+
+@media (max-width: 30rem) {
+  .nav__bar { gap: var(--space-3); }
+  .nav__right .nav__lang { display: none; }
+  .nav__lang--menu { display: flex; }
 }
 </style>
 
