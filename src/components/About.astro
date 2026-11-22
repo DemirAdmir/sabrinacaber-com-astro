@@ -19,9 +19,9 @@ const t = translations[lang].about;
           <div class="about__image-accent"></div>
         </div>
         <div class="about__stats">
-          {t.stats.map((s) => (
+          {t.facts.map((s) => (
             <div class="about__stat">
-              <span class="about__stat-num">{s.num}</span>
+              <span class="about__stat-num">{s.value}</span>
               <span class="about__stat-label">{s.label}</span>
             </div>
           ))}
