@@ -195,7 +195,7 @@ export const translations = {
         { label: 'LinkedIn', url: 'https://linkedin.com/in/sabrinacaber' },
       ],
       calendly: {
-        url: 'https://calendly.com/sabrinacaber',
+        url: 'https://calendly.com/sabrinacaber/30min',
         label: 'Book a Discovery Call',
         note: 'Free 30-minute intro call',
       },
@@ -429,7 +429,7 @@ export const translations = {
         { label: 'LinkedIn', url: 'https://linkedin.com/in/sabrinacaber' },
       ],
       calendly: {
-        url: 'https://calendly.com/sabrinacaber',
+        url: 'https://calendly.com/sabrinacaber/30min',
         label: 'Réserver un appel découverte',
         note: 'Appel intro gratuit de 30 minutes',
       },
@@ -663,7 +663,7 @@ export const translations = {
         { label: 'LinkedIn', url: 'https://linkedin.com/in/sabrinacaber' },
       ],
       calendly: {
-        url: 'https://calendly.com/sabrinacaber',
+        url: 'https://calendly.com/sabrinacaber/30min',
         label: 'Zakažite upoznavajući poziv',
         note: 'Besplatan 30-minutni uvodni poziv',
       },

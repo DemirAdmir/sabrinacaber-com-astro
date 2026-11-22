@@ -37,7 +37,7 @@ const messages = JSON.stringify({ errors: f.errors, sending: f.sending, success:
         </dl>
 
         <div class="contact__links">
-          <a class="btn btn--ghost" href={t.calendly.url} target="_blank" rel="noopener noreferrer">
+          <a class="btn btn--ghost" href="#book">
             <svg viewBox="0 0 24 24" aria-hidden="true" class="contact__icon"><rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" /></svg>
             {t.calendly.label}
           </a>
@@ -99,10 +99,51 @@ const messages = JSON.stringify({ errors: f.errors, sending: f.sending, success:
         <p class="contact__status" role="status" aria-live="polite"></p>
       </form>
     </div>
+
+    <div class="booking" id="book" data-reveal>
+      <div class="booking__head">
+        <h3 class="booking__title">{t.calendly.label}</h3>
+        <p class="booking__note">{t.calendly.note}</p>
+      </div>
+      <iframe
+        class="booking__frame"
+        src={`${t.calendly.url}?hide_gdpr_banner=1`}
+        data-base={t.calendly.url}
+        title={t.calendly.label}
+        loading="lazy"
+      ></iframe>
+    </div>
   </div>
 </section>
 
 <style>
+/* Calendly inline booking calendar */
+.booking {
+  margin-top: var(--section-pad);
+  padding-top: var(--space-12);
+  border-top: var(--rule-w) solid var(--color-rule);
+}
+.booking__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-6);
+  margin-bottom: var(--space-6);
+}
+.booking__title { font-size: var(--text-2xl); }
+.booking__note { color: var(--color-ink-muted); }
+.booking__frame {
+  display: block;
+  inline-size: 100%;
+  block-size: 44rem;
+  border: var(--rule-w) solid var(--color-rule);
+  background: var(--color-paper);
+}
+@media (max-width: 40rem) {
+  .booking__frame { block-size: 66rem; }
+}
+
 .contact__grid {
   display: grid;
   grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
@@ -202,6 +243,24 @@ const messages = JSON.stringify({ errors: f.errors, sending: f.sending, success:
 
 <script>
   import { validate, submitContact, guardInFlight } from '../scripts/contact-form.js';
+
+  // Theme the Calendly embed from our tokens (adapter config: maps tokens into Calendly's URL API).
+  const booking = document.querySelector<HTMLIFrameElement>('.booking__frame');
+  if (booking) {
+    const hex = (name: string) => getComputedStyle(document.documentElement).getPropertyValue(name).trim().replace('#', '');
+    const theme = () => {
+      const params = new URLSearchParams({
+        hide_gdpr_banner: '1',
+        background_color: hex('--color-paper'),
+        text_color: hex('--color-ink'),
+        primary_color: hex('--color-accent'),
+      });
+      const next = `${booking.dataset.base}?${params}`;
+      if (booking.src !== next) booking.src = next;
+    };
+    theme();
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', theme);
+  }
 
   const form = document.querySelector<HTMLFormElement>('form.contact__form');
   if (form) {

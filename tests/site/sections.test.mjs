@@ -109,3 +109,14 @@ for (const lang of LANGS) {
     assert.match(s, /role="status"/);
   });
 }
+
+for (const lang of LANGS) {
+  test(`${lang}: contact embeds the 30-minute Calendly booking calendar`, () => {
+    const s = section(load(lang), 'contact');
+    const frame = s.match(/<iframe[^>]*>/);
+    assert.ok(frame, 'no booking iframe');
+    assert.match(frame[0], /src="https:\/\/calendly\.com\/sabrinacaber\/30min[^"]*"/);
+    assert.match(frame[0], /title="[^"]+"/);
+    assert.match(frame[0], /loading="lazy"/);
+  });
+}
