@@ -67,7 +67,14 @@
       "Bash(grep -v \"^$\")",
       "Bash(vercel help *)",
       "Bash(vercel api *)",
-      "Bash(curl -s -o /dev/null -w 'old /contact: %{http_code}\\\\n' https://www.sabrinacaber.com/contact)"
+      "Bash(curl -s -o /dev/null -w 'old /contact: %{http_code}\\\\n' https://www.sabrinacaber.com/contact)",
+      "Read(//private/tmp/**)",
+      "Bash(vercel ls *)",
+      "Bash(curl -s \"https://web.archive.org/cdx/search/cdx?url=sabrinacaber.com/*&output=txt&fl=original&collapse=urlkey&filter=statuscode:200&limit=300\")",
+      "Bash(curl -s \"https://web.archive.org/cdx/search/cdx?url=sabrinacaber.com/*&fl=original&collapse=urlkey&limit=300\")",
+      "Bash(node --test tests/site/redirects.test.mjs)",
+      "Bash(git rm *)",
+      "Bash(python3 /Users/admirdemir/scripts/lint_hardcodes.py src)"
     ]
   }
 }

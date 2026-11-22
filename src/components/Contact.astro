@@ -6,6 +6,8 @@ const { lang = 'en' } = Astro.props;
 const t = translations[lang].contact;
 const f = t.form;
 const altLang = lang === 'fr' ? 'en' : 'fr';
+// Web3Forms public access key. Set PUBLIC_WEB3FORMS_KEY in the Vercel project; without it the form fails honestly.
+const web3formsKey = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? '';
 const messages = JSON.stringify({ errors: f.errors, sending: f.sending, success: f.successMsg, submit: f.submitBtn });
 ---
 
@@ -52,16 +54,16 @@ const messages = JSON.stringify({ errors: f.errors, sending: f.sending, success:
         class="contact__form"
         name="contact"
         method="POST"
-        data-netlify="true"
-        netlify-honeypot="bot-field"
         novalidate
+        data-key={web3formsKey}
         data-messages={messages}
         data-reveal
       >
-        <input type="hidden" name="form-name" value="contact" />
         <input type="hidden" name="lang" value={lang} />
+        <input type="hidden" name="subject" value={`New enquiry from sabrinacaber.com (${lang.toUpperCase()})`} />
+        <input type="hidden" name="from_name" value="sabrinacaber.com" />
         <p class="contact__hp" aria-hidden="true">
-          <label>Leave empty <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
+          <label>Leave empty <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" /></label>
         </p>
 
         <div class="field">
@@ -293,7 +295,7 @@ const messages = JSON.stringify({ errors: f.errors, sending: f.sending, success:
       btn.setAttribute('aria-busy', 'true');
       label.textContent = msg.sending;
       try {
-        await submitContact(Object.fromEntries(new FormData(form)) as Record<string, string>);
+        await submitContact(Object.fromEntries(new FormData(form)) as Record<string, string>, form.dataset.key || '');
         form.reset();
         status.textContent = msg.success;
       } catch {

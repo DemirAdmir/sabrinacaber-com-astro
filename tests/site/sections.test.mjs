@@ -86,16 +86,16 @@ for (const lang of LANGS) {
 const FORM_LANG = { en: 'en', fr: 'fr', bhs: 'bhs' };
 
 for (const lang of LANGS) {
-  test(`${lang}: contact form is wired for Netlify Forms`, () => {
+  test(`${lang}: contact form is wired for Web3Forms, not Netlify`, () => {
     const s = section(load(lang), 'contact');
     const form = s.match(/<form[^>]*>/)[0];
     assert.match(form, /name="contact"/);
-    assert.match(form, /method="POST"/i);
-    assert.match(form, /data-netlify="true"/);
-    assert.match(form, /netlify-honeypot="bot-field"/);
-    assert.match(s, /<input[^>]*type="hidden"[^>]*name="form-name"[^>]*value="contact"/);
+    assert.match(form, /data-key="[^"]*"/);
+    assert.doesNotMatch(form, /netlify/);
+    assert.doesNotMatch(s, /name="form-name"/);
     assert.match(s, new RegExp(`<input[^>]*type="hidden"[^>]*name="lang"[^>]*value="${FORM_LANG[lang]}"`));
-    assert.match(s, /name="bot-field"/);
+    assert.match(s, /<input[^>]*type="hidden"[^>]*name="subject"[^>]*value="[^"]+"/);
+    assert.match(s, /<input[^>]*type="checkbox"[^>]*name="botcheck"/);
   });
 
   test(`${lang}: contact inputs are labelled and point to their error text`, () => {
