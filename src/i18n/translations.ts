@@ -206,7 +206,7 @@ export const translations = {
         messageLabel: 'Tell me about your project',
         messagePlaceholder: "I'm working on…",
         submitBtn: 'Send Message',
-        successMsg: 'Message Sent ✓',
+        successMsg: 'Message Sent',
       },
     },
     footer: {
@@ -422,7 +422,7 @@ export const translations = {
         messageLabel: 'Parlez-moi de votre projet',
         messagePlaceholder: 'Je travaille sur…',
         submitBtn: 'Envoyer le message',
-        successMsg: 'Message envoyé ✓',
+        successMsg: 'Message envoyé',
       },
     },
     footer: {
@@ -638,7 +638,7 @@ export const translations = {
         messageLabel: 'Recite mi o svom projektu',
         messagePlaceholder: 'Radim na…',
         submitBtn: 'Pošaljite poruku',
-        successMsg: 'Poruka poslana ✓',
+        successMsg: 'Poruka poslana',
       },
     },
     footer: {

@@ -32,7 +32,18 @@
       "Bash(grep -r \"IntersectionObserver\\\\|observer\\\\|scroll.*active\\\\|active.*section\" /Users/admirdemir/Projects/sabrinacaber-com-astro/src --include=*.astro --include=*.ts --include=*.js)",
       "Bash(npm run:*)",
       "Bash(gh api:*)",
-      "Bash(npx netlify-cli:*)"
+      "Bash(npx netlify-cli:*)",
+      "Bash(git checkout *)",
+      "Bash(ls /Users/admirdemir/scripts 2>/dev/null | head -40; node --version; cd /Users/admirdemir/Projects/sabrinacaber-com-astro && grep -n \"hero:\\\\|about:\\\\|stats\\\\|successMsg\\\\|✓\\\\|↔\" src/i18n/translations.ts | head -40; grep -rn \"sabrina.png\\\\|avatar.glb\" src --include=*.astro | head)",
+      "Bash(node -e ' *)",
+      "Bash(python3 /Users/admirdemir/scripts/contrast.py \"#1b2340\" \"#f5f0e6\")",
+      "Bash(python3 /Users/admirdemir/scripts/contrast.py 1b2340 f5f0e6)",
+      "Bash(python3 -)",
+      "Bash(sed -i '' '/Testimonials/d' src/pages/index.astro src/pages/fr/index.astro src/pages/bhs/index.astro)",
+      "Bash(node -e 'const s=require\\(\"fs\"\\).readFileSync\\(\"dist/index.html\",\"utf8\"\\);for\\(const m of s.matchAll\\(/\\\\p{Extended_Pictographic}/gu\\)\\)console.log\\(JSON.stringify\\(m[0]\\),m[0].codePointAt\\(0\\).toString\\(16\\),s.slice\\(m.index-60,m.index+10\\)\\)')",
+      "Bash(sed -i '' 's/ ✓//g' src/i18n/translations.ts)",
+      "Bash(sed -i '' 's/<span class=\"sep\">◆<\\\\/span>/<span class=\"sep\" aria-hidden=\"true\">\\\\/<\\\\/span>/' src/components/Hero.astro)",
+      "Bash(node -e 'const s=require\\(\"fs\"\\).readFileSync\\(\"dist/index.html\",\"utf8\"\\);for\\(const m of s.matchAll\\(/\\(?![←-⇿]\\)[\\\\p{Extended_Pictographic}✓✔◆]/gu\\)\\)console.log\\(m[0].codePointAt\\(0\\).toString\\(16\\),s.slice\\(m.index-80,m.index+5\\)\\)')"
     ]
   }
 }
