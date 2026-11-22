@@ -50,7 +50,9 @@
       "Bash(grep -v \"^\\\\s*$\")",
       "Bash(ls /Users/admirdemir/Library/Caches/ms-playwright/; ls \"/Applications/Google Chrome.app\" >/dev/null 2>&1 && echo chrome)",
       "Bash(pkill -f \"http.server 4791\")",
-      "Bash(grep -n \"import { validate\\\\|form.addEventListener\\('submit'\\\\|e.preventDefault\\\\|^    }\\);$\" src/components/Contact.astro)"
+      "Bash(grep -n \"import { validate\\\\|form.addEventListener\\('submit'\\\\|e.preventDefault\\\\|^    }\\);$\" src/components/Contact.astro)",
+      "Bash(git pull *)",
+      "Bash(git merge --no-ff redesign/two-voices -m 'Merge redesign/two-voices: Two Voices redesign *)"
     ]
   }
 }
