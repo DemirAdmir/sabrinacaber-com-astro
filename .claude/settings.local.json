@@ -44,7 +44,8 @@
       "Bash(sed -i '' 's/ ✓//g' src/i18n/translations.ts)",
       "Bash(sed -i '' 's/<span class=\"sep\">◆<\\\\/span>/<span class=\"sep\" aria-hidden=\"true\">\\\\/<\\\\/span>/' src/components/Hero.astro)",
       "Bash(node -e 'const s=require\\(\"fs\"\\).readFileSync\\(\"dist/index.html\",\"utf8\"\\);for\\(const m of s.matchAll\\(/\\(?![←-⇿]\\)[\\\\p{Extended_Pictographic}✓✔◆]/gu\\)\\)console.log\\(m[0].codePointAt\\(0\\).toString\\(16\\),s.slice\\(m.index-80,m.index+5\\)\\)')",
-      "Bash(npx astro *)"
+      "Bash(npx astro *)",
+      "Bash(npm test *)"
     ]
   }
 }
