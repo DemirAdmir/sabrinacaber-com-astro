@@ -75,9 +75,9 @@ const others = (Object.keys(phrases) as Lang[]).filter((l) => l !== lang);
 .hero__title {
   display: grid;
   font-size: var(--text-display);
-  font-weight: 350;
+  font-weight: var(--weight-display);
   line-height: var(--leading-tight);
-  letter-spacing: -0.025em;
+  letter-spacing: var(--tracking-display);
   margin-bottom: var(--space-4);
 }
 .hero__title > * { grid-area: 1 / 1; }

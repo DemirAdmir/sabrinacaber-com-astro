@@ -120,3 +120,18 @@ for (const lang of LANGS) {
     assert.match(frame[0], /loading="lazy"/);
   });
 }
+
+for (const lang of LANGS) {
+  test(`${lang}: booking pairs an explanation column with a compact calendar`, () => {
+    const s = section(load(lang), 'contact');
+    const booking = s.slice(s.indexOf('id="book"'));
+    assert.match(booking, /class="booking__intro"/);
+    const points = booking.match(/<ul[^>]*class="booking__points"[\s\S]*?<\/ul>/);
+    assert.ok(points, 'no points list');
+    assert.equal((points[0].match(/<li/g) || []).length, 3);
+    assert.match(booking, /<a[^>]*href="mailto:sabrinacaber@gmail\.com"/);
+    const frame = booking.match(/<iframe[^>]*>/)[0];
+    assert.match(frame, /hide_event_type_details=1/);
+    assert.match(frame, /hide_landing_page_details=1/);
+  });
+}

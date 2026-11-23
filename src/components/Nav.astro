@@ -36,9 +36,9 @@ const langs = Object.keys(langConfig) as Lang[];
       <div class="nav__lang" role="group" aria-label={ui[lang].language}>
         {langs.map((l) =>
           l === lang ? (
-            <span class="nav__lang-item is-current" aria-current="true">{langConfig[l].label}</span>
+            <span class="nav__lang-item is-current" aria-current="page">{langConfig[l].label}</span>
           ) : (
-            <a class="nav__lang-item" href={langConfig[l].url} hreflang={langConfig[l].code} lang={langConfig[l].code}>{langConfig[l].label}</a>
+            <a class="nav__lang-item" data-lang-switch href={langConfig[l].url} hreflang={langConfig[l].code} lang={langConfig[l].code}>{langConfig[l].label}</a>
           )
         )}
       </div>
@@ -58,9 +58,9 @@ const langs = Object.keys(langConfig) as Lang[];
       <div class="nav__lang nav__lang--menu" role="group" aria-label={ui[lang].language}>
         {langs.map((l) =>
           l === lang ? (
-            <span class="nav__lang-item is-current" aria-current="true">{langConfig[l].label}</span>
+            <span class="nav__lang-item is-current" aria-current="page">{langConfig[l].label}</span>
           ) : (
-            <a class="nav__lang-item" href={langConfig[l].url} hreflang={langConfig[l].code} lang={langConfig[l].code}>{langConfig[l].label}</a>
+            <a class="nav__lang-item" data-lang-switch href={langConfig[l].url} hreflang={langConfig[l].code} lang={langConfig[l].code}>{langConfig[l].label}</a>
           )
         )}
       </div>
@@ -177,6 +177,13 @@ a.nav__lang-item:hover { color: var(--color-accent); }
 </style>
 
 <script>
+  // Switching language keeps the reader on the same section (#services stays #services).
+  document.querySelectorAll<HTMLAnchorElement>('[data-lang-switch]').forEach((a) => {
+    a.addEventListener('click', () => {
+      if (location.hash) a.hash = location.hash;
+    });
+  });
+
   const toggle = document.querySelector<HTMLButtonElement>('.nav__toggle');
   const menu = document.getElementById('mobile-menu');
 

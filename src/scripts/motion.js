@@ -1,15 +1,19 @@
 // anime.js motion layer. Opt-in: nothing is hidden unless this runs and adds html.motion.
 import anime from 'animejs/lib/anime.es.js';
 import { morphFrame, cycleOrder, GLYPHS } from './morph.js';
+import { toMs } from './tokens.js';
 
 const CODES = { en: 'EN', fr: 'FR', bhs: 'BHS' };
-const MORPH_MS = 1200;
-const HOLD_PAGE_MS = 4000;
-const HOLD_OTHER_MS = 1600;
 
-function token(name, fallback) {
-  const v = parseFloat(getComputedStyle(document.documentElement).getPropertyValue(name));
-  return Number.isFinite(v) ? v : fallback;
+const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name);
+
+/** A duration token in milliseconds; 0 if missing, which just makes motion instant. */
+const ms = (name) => toMs(css(name));
+
+/** A plain numeric token (rem or px value without its unit); 0 if missing. */
+function num(name) {
+  const v = parseFloat(css(name));
+  return Number.isFinite(v) ? v : 0;
 }
 
 function randomText(text) {
@@ -63,7 +67,7 @@ function initHero() {
     anime({
       targets: state,
       p: 1,
-      duration: MORPH_MS,
+      duration: ms('--dur-morph'),
       easing: 'easeOutQuad',
       update: () => { layer.textContent = morphFrame(from, to, state.p); },
       complete: () => {
@@ -71,7 +75,7 @@ function initHero() {
         current = next;
         if (current === page) settleOnPage();
         else show(to);
-        schedule(current === page ? HOLD_PAGE_MS : HOLD_OTHER_MS);
+        schedule(ms(current === page ? '--dur-hold' : '--dur-hold-short'));
       },
     });
   };
@@ -82,12 +86,12 @@ function initHero() {
 
   show(phrases[current]);
   if (routeFrom) routeFrom.textContent = CODES[current];
-  schedule(700);
+  schedule(ms('--dur-slow'));
 }
 
 function initReveals() {
-  const slow = token('--dur-slow', 700);
-  const distance = token('--reveal-distance', 1.5) * token('font-size', 16);
+  const slow = ms('--dur-slow');
+  const distance = num('--reveal-distance') * num('font-size');
   let batch = [];
   let frame = 0;
 
@@ -101,7 +105,7 @@ function initReveals() {
         targets: reveals,
         opacity: [0, 1],
         translateY: [distance, 0],
-        delay: anime.stagger(80),
+        delay: anime.stagger(ms('--stagger')),
         duration: slow,
         easing: 'easeOutCubic',
       });
@@ -135,8 +139,8 @@ function initScramble() {
       anime({
         targets: state,
         p: 1,
-        duration: 900,
-        delay: 250,
+        duration: ms('--dur-scramble'),
+        delay: ms('--delay-scramble'),
         easing: 'easeOutQuad',
         update: () => { el.textContent = morphFrame(from, text, state.p); },
       });

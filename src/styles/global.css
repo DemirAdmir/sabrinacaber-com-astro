@@ -136,3 +136,9 @@ ul, ol { list-style: none; }
 /* Reveal hooks: content hidden only once motion.js has opted in */
 html.motion [data-reveal] { opacity: 0; transform: translateY(var(--reveal-distance)); }
 html.motion [data-rule] { transform: scaleX(0); transform-origin: left center; }
+
+/* Print everything, including sections never scrolled into view */
+@media print {
+  html.motion [data-reveal],
+  html.motion [data-rule] { opacity: 1 !important; transform: none !important; }
+}

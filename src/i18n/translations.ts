@@ -121,7 +121,6 @@ export const translations = {
           description:
             'Writing SEO-optimised content for diverse clients across multiple industries. Keyword research, long-form articles, and content strategies that rank and engage.',
           year: '2021 – Present',
-          color: '#6b3fa8',
           type: 'experience',
         },
         {
@@ -131,7 +130,6 @@ export const translations = {
           description:
             'Copywriting and translation work for DDC Multilingual Solutions, supporting UPS operations across France and Luxembourg. Translating documents, marketing materials, and internal communications.',
           year: '2019 – 2021',
-          color: '#4a2d8c',
           type: 'experience',
         },
         {
@@ -141,7 +139,6 @@ export const translations = {
           description:
             'Certified court interpreter providing accurate and impartial interpretation services in legal proceedings. Maintaining the highest standards of confidentiality and professional ethics.',
           year: '2018 – 2019',
-          color: '#9b4dff',
           type: 'experience',
         },
         {
@@ -151,7 +148,6 @@ export const translations = {
           description:
             'Translation and interpretation services for Energoinvest, working across Algeria and Sarajevo. Facilitating communication between French-speaking and local teams on infrastructure and engineering projects.',
           year: '2015 – 2018',
-          color: '#3a6b4a',
           type: 'experience',
         },
         {
@@ -161,7 +157,6 @@ export const translations = {
           description:
             "Master's degree in French Language and Literature, building deep expertise in linguistics, literary analysis, and translation theory.",
           year: '2013 – 2015',
-          color: '#1d4a6b',
           type: 'education',
         },
         {
@@ -171,7 +166,6 @@ export const translations = {
           description:
             'Google Digital Marketing Certificate and SEO Bootcamp certification — combining technical SEO knowledge with digital marketing strategy to deliver content that performs.',
           year: '2020 – 2021',
-          color: '#8c4a2d',
           type: 'education',
         },
       ],
@@ -198,6 +192,12 @@ export const translations = {
         url: 'https://calendly.com/sabrinacaber/30min',
         label: 'Book a Discovery Call',
         note: 'Free 30-minute intro call',
+        points: [
+          'Talk through your text, audience and deadline',
+          'Get a clear scope and quote',
+          'No obligation, no cost',
+        ],
+        emailPrompt: 'Prefer email?',
       },
       form: {
         nameLabel: 'Your Name',
@@ -355,7 +355,6 @@ export const translations = {
           description:
             'Rédaction de contenus optimisés SEO pour divers clients dans de multiples secteurs. Recherche de mots-clés, articles de longue portée et stratégies de contenu performantes.',
           year: '2021 – Présent',
-          color: '#6b3fa8',
           type: 'experience',
         },
         {
@@ -365,7 +364,6 @@ export const translations = {
           description:
             "Rédaction et traduction pour DDC Multilingual Solutions, en soutien aux opérations UPS en France et au Luxembourg. Traduction de documents, supports marketing et communications internes.",
           year: '2019 – 2021',
-          color: '#4a2d8c',
           type: 'experience',
         },
         {
@@ -375,7 +373,6 @@ export const translations = {
           description:
             "Prestation d'interprétation précise et impartiale dans le cadre de procédures judiciaires. Respect des normes les plus élevées en matière de confidentialité et d'éthique professionnelle.",
           year: '2018 – 2019',
-          color: '#9b4dff',
           type: 'experience',
         },
         {
@@ -385,7 +382,6 @@ export const translations = {
           description:
             "Services de traduction et d'interprétation pour Energoinvest, en Algérie et à Sarajevo. Facilitation de la communication entre équipes francophones et locales sur des projets d'infrastructure.",
           year: '2015 – 2018',
-          color: '#3a6b4a',
           type: 'experience',
         },
         {
@@ -395,7 +391,6 @@ export const translations = {
           description:
             "Master en langue et littérature françaises, développant une expertise approfondie en linguistique, analyse littéraire et théorie de la traduction.",
           year: '2013 – 2015',
-          color: '#1d4a6b',
           type: 'education',
         },
         {
@@ -405,7 +400,6 @@ export const translations = {
           description:
             'Certificat Google Digital Marketing et certification SEO Bootcamp — alliant connaissances techniques en SEO et stratégie de marketing digital pour produire des contenus performants.',
           year: '2020 – 2021',
-          color: '#8c4a2d',
           type: 'education',
         },
       ],
@@ -432,6 +426,12 @@ export const translations = {
         url: 'https://calendly.com/sabrinacaber/30min',
         label: 'Réserver un appel découverte',
         note: 'Appel intro gratuit de 30 minutes',
+        points: [
+          'Échangeons sur votre texte, votre public et vos délais',
+          'Recevez un périmètre et un devis clairs',
+          'Sans engagement, sans frais',
+        ],
+        emailPrompt: 'Vous préférez l’e-mail ?',
       },
       form: {
         nameLabel: 'Votre nom',
@@ -589,7 +589,6 @@ export const translations = {
           description:
             'Pisanje SEO-optimiziranog sadržaja za raznolike klijente u višestrukim industrijama. Istraživanje ključnih riječi, dugački članci i strategije sadržaja koje se rangiraju i angažuju.',
           year: '2021 – Danas',
-          color: '#6b3fa8',
           type: 'experience',
         },
         {
@@ -599,7 +598,6 @@ export const translations = {
           description:
             'Copywriting i prevoditeljski rad za DDC Multilingual Solutions, podrška UPS operacijama u Francuskoj i Luksemburgu. Prevođenje dokumenata, marketinških materijala i internih komunikacija.',
           year: '2019 – 2021',
-          color: '#4a2d8c',
           type: 'experience',
         },
         {
@@ -609,7 +607,6 @@ export const translations = {
           description:
             'Certificirana sudska prevoditeljica koja pruža precizne i nepristrasne usluge prevođenja u pravnim postupcima. Održavanje najviših standarda povjerljivosti i profesionalne etike.',
           year: '2018 – 2019',
-          color: '#9b4dff',
           type: 'experience',
         },
         {
@@ -619,7 +616,6 @@ export const translations = {
           description:
             'Usluge prevođenja i tumačenja za Energoinvest, rad u Alžiru i Sarajevu. Olakšavanje komunikacije između frankofonih i lokalnih timova na infrastrukturnim i inženjerskim projektima.',
           year: '2015 – 2018',
-          color: '#3a6b4a',
           type: 'experience',
         },
         {
@@ -629,7 +625,6 @@ export const translations = {
           description:
             'Magistarski studij francuskog jezika i književnosti, izgradnja duboke stručnosti u lingvistici, književnoj analizi i teoriji prevođenja.',
           year: '2013 – 2015',
-          color: '#1d4a6b',
           type: 'education',
         },
         {
@@ -639,7 +634,6 @@ export const translations = {
           description:
             'Google Digital Marketing certifikat i SEO Bootcamp certifikacija — spajanje tehničkog SEO znanja sa strategijom digitalnog marketinga za isporuku sadržaja koji ostvaruje rezultate.',
           year: '2020 – 2021',
-          color: '#8c4a2d',
           type: 'education',
         },
       ],
@@ -666,6 +660,12 @@ export const translations = {
         url: 'https://calendly.com/sabrinacaber/30min',
         label: 'Zakažite upoznavajući poziv',
         note: 'Besplatan 30-minutni uvodni poziv',
+        points: [
+          'Razgovaramo o vašem tekstu, publici i roku',
+          'Dobijate jasan obim posla i ponudu',
+          'Bez obaveze i bez troškova',
+        ],
+        emailPrompt: 'Više volite email?',
       },
       form: {
         nameLabel: 'Vaše ime',
