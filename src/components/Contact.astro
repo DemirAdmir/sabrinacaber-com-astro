@@ -6,6 +6,10 @@ const { lang = 'en' } = Astro.props;
 const t = translations[lang].contact;
 const f = t.form;
 const altLang = lang === 'fr' ? 'en' : 'fr';
+// Web3Forms public access key. Set PUBLIC_WEB3FORMS_KEY in the Vercel project; without it the form fails honestly.
+const web3formsKey = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? '';
+// Our own column already shows the title and duration, so Calendly's header is hidden.
+const calendlyQuery = 'hide_gdpr_banner=1&hide_event_type_details=1&hide_landing_page_details=1';
 const messages = JSON.stringify({ errors: f.errors, sending: f.sending, success: f.successMsg, submit: f.submitBtn });
 ---
 
@@ -52,16 +56,16 @@ const messages = JSON.stringify({ errors: f.errors, sending: f.sending, success:
         class="contact__form"
         name="contact"
         method="POST"
-        data-netlify="true"
-        netlify-honeypot="bot-field"
         novalidate
+        data-key={web3formsKey}
         data-messages={messages}
         data-reveal
       >
-        <input type="hidden" name="form-name" value="contact" />
         <input type="hidden" name="lang" value={lang} />
+        <input type="hidden" name="subject" value={`New enquiry from sabrinacaber.com (${lang.toUpperCase()})`} />
+        <input type="hidden" name="from_name" value="sabrinacaber.com" />
         <p class="contact__hp" aria-hidden="true">
-          <label>Leave empty <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
+          <label>Leave empty <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" /></label>
         </p>
 
         <div class="field">
@@ -101,47 +105,96 @@ const messages = JSON.stringify({ errors: f.errors, sending: f.sending, success:
     </div>
 
     <div class="booking" id="book" data-reveal>
-      <div class="booking__head">
+      <div class="booking__intro">
+        <p class="label booking__eyebrow">{t.calendly.note}</p>
         <h3 class="booking__title">{t.calendly.label}</h3>
-        <p class="booking__note">{t.calendly.note}</p>
+        <ul class="booking__points">
+          {t.calendly.points.map((p) => (
+            <li>
+              <svg viewBox="0 0 24 24" aria-hidden="true" class="booking__check"><path d="M20 6 9 17l-5-5" /></svg>
+              {p}
+            </li>
+          ))}
+        </ul>
+        <p class="booking__email">
+          {t.calendly.emailPrompt}
+          <a class="link" href="mailto:sabrinacaber@gmail.com">sabrinacaber@gmail.com</a>
+        </p>
       </div>
-      <iframe
-        class="booking__frame"
-        src={`${t.calendly.url}?hide_gdpr_banner=1`}
-        data-base={t.calendly.url}
-        title={t.calendly.label}
-        loading="lazy"
-      ></iframe>
+      <div class="booking__calendar">
+        <iframe
+          class="booking__frame"
+          src={`${t.calendly.url}?${calendlyQuery}`}
+          title={t.calendly.label}
+          loading="lazy"
+        ></iframe>
+      </div>
     </div>
   </div>
 </section>
 
 <style>
-/* Calendly inline booking calendar */
+/* Calendly inline booking: explanation column + compact calendar card */
 .booking {
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+  gap: clamp(var(--space-10), 6vw, var(--space-24));
+  align-items: start;
   margin-top: var(--section-pad);
-  padding-top: var(--space-12);
+  padding-top: var(--space-16);
   border-top: var(--rule-w) solid var(--color-rule);
 }
-.booking__head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--space-2) var(--space-6);
-  margin-bottom: var(--space-6);
+
+.booking__intro { position: sticky; top: calc(var(--header-h) + var(--space-8)); }
+.booking__eyebrow { color: var(--color-accent); margin-bottom: var(--space-4); }
+.booking__title { font-size: var(--text-3xl); margin-bottom: var(--space-8); max-width: 12ch; }
+
+.booking__points { display: grid; gap: var(--space-4); margin-bottom: var(--space-8); }
+.booking__points li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--space-3);
+  align-items: start;
+  padding-bottom: var(--space-4);
+  border-bottom: var(--rule-w) solid var(--color-rule);
 }
-.booking__title { font-size: var(--text-2xl); }
-.booking__note { color: var(--color-ink-muted); }
+.booking__check {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-top: var(--space-1);
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.booking__email { color: var(--color-ink-muted); font-size: var(--text-sm); }
+.booking__email .link { overflow-wrap: anywhere; }
+
+/* Calendly renders its own white UI (colours are a paid feature), so it sits on a white card
+   in both themes instead of fighting the page colour. */
+.booking__calendar {
+  inline-size: 100%;
+  max-inline-size: var(--booking-max);
+  justify-self: end;
+  background: var(--color-embed);
+  border: var(--rule-w) solid var(--color-rule);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
 .booking__frame {
   display: block;
   inline-size: 100%;
-  block-size: 44rem;
-  border: var(--rule-w) solid var(--color-rule);
-  background: var(--color-paper);
+  block-size: var(--booking-h);
+  border: 0;
 }
-@media (max-width: 40rem) {
-  .booking__frame { block-size: 66rem; }
+
+@media (max-width: 56rem) {
+  .booking { grid-template-columns: minmax(0, 1fr); }
+  .booking__intro { position: static; }
+  .booking__title { max-width: none; }
+  .booking__calendar { justify-self: stretch; max-inline-size: none; }
 }
 
 .contact__grid {
@@ -223,7 +276,7 @@ const messages = JSON.stringify({ errors: f.errors, sending: f.sending, success:
 .contact__spinner { display: none; }
 .contact__submit[aria-busy='true'] { pointer-events: none; }
 .contact__submit[aria-busy='true'] .contact__send { display: none; }
-.contact__submit[aria-busy='true'] .contact__spinner { display: block; animation: spin 0.8s linear infinite; }
+.contact__submit[aria-busy='true'] .contact__spinner { display: block; animation: spin var(--dur-spin) linear infinite; }
 @keyframes spin { to { transform: rotate(1turn); } }
 
 .contact__status { font-size: var(--text-sm); font-weight: 500; }
@@ -237,30 +290,12 @@ const messages = JSON.stringify({ errors: f.errors, sending: f.sending, success:
   .contact__details > div { grid-template-columns: minmax(0, 1fr); gap: var(--space-1); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .contact__submit[aria-busy='true'] .contact__spinner { animation-duration: 2.4s; }
+  .contact__spinner, .contact__submit[aria-busy='true'] .contact__spinner { animation: none; }
 }
 </style>
 
 <script>
   import { validate, submitContact, guardInFlight } from '../scripts/contact-form.js';
-
-  // Theme the Calendly embed from our tokens (adapter config: maps tokens into Calendly's URL API).
-  const booking = document.querySelector<HTMLIFrameElement>('.booking__frame');
-  if (booking) {
-    const hex = (name: string) => getComputedStyle(document.documentElement).getPropertyValue(name).trim().replace('#', '');
-    const theme = () => {
-      const params = new URLSearchParams({
-        hide_gdpr_banner: '1',
-        background_color: hex('--color-paper'),
-        text_color: hex('--color-ink'),
-        primary_color: hex('--color-accent'),
-      });
-      const next = `${booking.dataset.base}?${params}`;
-      if (booking.src !== next) booking.src = next;
-    };
-    theme();
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', theme);
-  }
 
   const form = document.querySelector<HTMLFormElement>('form.contact__form');
   if (form) {
@@ -293,7 +328,7 @@ const messages = JSON.stringify({ errors: f.errors, sending: f.sending, success:
       btn.setAttribute('aria-busy', 'true');
       label.textContent = msg.sending;
       try {
-        await submitContact(Object.fromEntries(new FormData(form)) as Record<string, string>);
+        await submitContact(Object.fromEntries(new FormData(form)) as Record<string, string>, form.dataset.key || '');
         form.reset();
         status.textContent = msg.success;
       } catch {

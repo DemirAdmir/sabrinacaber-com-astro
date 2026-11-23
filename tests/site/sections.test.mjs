@@ -86,16 +86,16 @@ for (const lang of LANGS) {
 const FORM_LANG = { en: 'en', fr: 'fr', bhs: 'bhs' };
 
 for (const lang of LANGS) {
-  test(`${lang}: contact form is wired for Netlify Forms`, () => {
+  test(`${lang}: contact form is wired for Web3Forms, not Netlify`, () => {
     const s = section(load(lang), 'contact');
     const form = s.match(/<form[^>]*>/)[0];
     assert.match(form, /name="contact"/);
-    assert.match(form, /method="POST"/i);
-    assert.match(form, /data-netlify="true"/);
-    assert.match(form, /netlify-honeypot="bot-field"/);
-    assert.match(s, /<input[^>]*type="hidden"[^>]*name="form-name"[^>]*value="contact"/);
+    assert.match(form, /data-key="[^"]*"/);
+    assert.doesNotMatch(form, /netlify/);
+    assert.doesNotMatch(s, /name="form-name"/);
     assert.match(s, new RegExp(`<input[^>]*type="hidden"[^>]*name="lang"[^>]*value="${FORM_LANG[lang]}"`));
-    assert.match(s, /name="bot-field"/);
+    assert.match(s, /<input[^>]*type="hidden"[^>]*name="subject"[^>]*value="[^"]+"/);
+    assert.match(s, /<input[^>]*type="checkbox"[^>]*name="botcheck"/);
   });
 
   test(`${lang}: contact inputs are labelled and point to their error text`, () => {
@@ -118,5 +118,20 @@ for (const lang of LANGS) {
     assert.match(frame[0], /src="https:\/\/calendly\.com\/sabrinacaber\/30min[^"]*"/);
     assert.match(frame[0], /title="[^"]+"/);
     assert.match(frame[0], /loading="lazy"/);
+  });
+}
+
+for (const lang of LANGS) {
+  test(`${lang}: booking pairs an explanation column with a compact calendar`, () => {
+    const s = section(load(lang), 'contact');
+    const booking = s.slice(s.indexOf('id="book"'));
+    assert.match(booking, /class="booking__intro"/);
+    const points = booking.match(/<ul[^>]*class="booking__points"[\s\S]*?<\/ul>/);
+    assert.ok(points, 'no points list');
+    assert.equal((points[0].match(/<li/g) || []).length, 3);
+    assert.match(booking, /<a[^>]*href="mailto:sabrinacaber@gmail\.com"/);
+    const frame = booking.match(/<iframe[^>]*>/)[0];
+    assert.match(frame, /hide_event_type_details=1/);
+    assert.match(frame, /hide_landing_page_details=1/);
   });
 }

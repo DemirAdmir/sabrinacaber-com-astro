@@ -12,7 +12,7 @@ function header(html) {
 for (const lang of LANGS) {
   test(`${lang}: language switch marks current and links the others`, () => {
     const h = header(load(lang));
-    assert.match(h, new RegExp(`<span[^>]*aria-current="true"[^>]*>\\s*${lang.toUpperCase()}\\s*<`));
+    assert.match(h, new RegExp(`<span[^>]*aria-current="page"[^>]*>\\s*${lang.toUpperCase()}\\s*<`));
     for (const other of LANGS.filter((l) => l !== lang)) {
       const a = h.match(new RegExp(`<a[^>]*href="${URL[other]}"[^>]*>\\s*${other.toUpperCase()}\\s*<`));
       assert.ok(a, `missing link to ${other}`);

@@ -14,13 +14,6 @@ export function validate({ name, email, message }) {
   return errors;
 }
 
-/** @param {Record<string, string>} data */
-export function encode(data) {
-  return Object.entries(data)
-    .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
-    .join('&');
-}
-
 /**
  * Wraps an async function so calls made while one is still running are ignored
  * (Enter pressed again during a send must not post twice).
@@ -37,16 +30,22 @@ export function guardInFlight(fn) {
   };
 }
 
+const ENDPOINT = 'https://api.web3forms.com/submit';
+
 /**
- * Posts to Netlify Forms. Resolves only on a 2xx response.
+ * Sends the message through Web3Forms. Resolves only when the service confirms delivery.
  * @param {Record<string, string>} data
+ * @param {string} accessKey Web3Forms public access key (PUBLIC_WEB3FORMS_KEY at build time)
  * @param {typeof fetch} fetchImpl
  */
-export async function submitContact(data, fetchImpl = fetch) {
-  const res = await fetchImpl('/', {
+export async function submitContact(data, accessKey, fetchImpl = fetch) {
+  if (!accessKey) throw new Error('contact form not configured');
+  const res = await fetchImpl(ENDPOINT, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: encode(data),
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    body: JSON.stringify({ ...data, access_key: accessKey }),
   });
   if (!res.ok) throw new Error('http ' + res.status);
+  const body = await res.json();
+  if (!body.success) throw new Error(body.message || 'delivery failed');
 }
